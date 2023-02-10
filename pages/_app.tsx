@@ -1,5 +1,5 @@
 import { AppProps } from 'next/app';
-import { MainLayout } from '~/components/common/Layout';
+import { MainLayout } from '~/components/common';
 
 import 'antd/dist/reset.css';
 import '~/styles/globals.css';

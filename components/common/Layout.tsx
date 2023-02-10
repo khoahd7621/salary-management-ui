@@ -6,17 +6,17 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Layout, LayoutProps, Menu } from 'antd';
-import React, { useState } from 'react';
+import { createElement, ReactElement, useState } from 'react';
 
-export const MainLayout = ({ children }: LayoutProps) => {
+export const MainLayout = ({ children }: LayoutProps): ReactElement => {
   const { Header, Sider, Content } = Layout;
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
 
   return (
-    <Layout className="layout">
+    <Layout className="h-screen">
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
+        <div className="h-8 m-4 bg-[#ffffff4d]" />
         <Menu
           theme="dark"
           mode="inline"
@@ -40,27 +40,15 @@ export const MainLayout = ({ children }: LayoutProps) => {
           ]}
         />
       </Sider>
-      <Layout className="site-layout">
-        <Header
-          className="site-layout-background"
-          style={{
-            padding: 0,
-          }}
-        >
-          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
-            onClick: () => setCollapsed(!collapsed),
+      <Layout>
+        <Header className="!bg-white p-0">
+          {createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className:
+              'py-0 px-0 text-xl leading-[64px] cursor-pointer transition-colors duration-300 hover:text-[#1890ff]',
+            onClick: () => setCollapsed((collapsed) => !collapsed),
           })}
         </Header>
-        <Content
-          className="site-layout-background"
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-          }}
-        >
-          {children}
-        </Content>
+        <Content className="bg-white my-6 mx-4 p-6">{children}</Content>
       </Layout>
     </Layout>
   );
