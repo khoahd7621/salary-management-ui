@@ -1,0 +1,29 @@
+{
+  "name": "salary-management",
+  "version": "1.0.0",
+  "description": "Log OT and Salary Management System",
+  "author": "Secret Billionaire",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prettier": "prettier -write ."
+  },
+  "dependencies": {
+    "@next/font": "13.1.6",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.19",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "18.0.10",
+    "eslint": "8.33.0",
+    "eslint-config-next": "13.1.6",
+    "prettier": "2.8.3",
+    "typescript": "4.9.5"
+  }
+}
