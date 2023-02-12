@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: process.env.HOST_URL,
+  baseURL: '/api/v1',
 });
 
 axiosClient.interceptors.request.use(
