@@ -65,7 +65,7 @@ const LoginPage: NextPageWithLayout = () => {
                     message: 'Please input your Password!',
                   },
                   {
-                    min: 6,
+                    min: 3,
                     message: 'Password must be at least 6 characters',
                   },
                 ]}
