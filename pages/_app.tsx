@@ -1,18 +1,20 @@
-import { AppProps } from 'next/app';
-import { MainLayout } from '~/components/common';
 import { Provider } from 'react-redux';
 
+import { MainLayout } from '~/components/layouts';
+import { AppPropsWithLayout } from '~/models/components/layouts';
 import { store } from '~/redux/store';
 
 import 'antd/dist/reset.css';
 import '~/styles/globals.css';
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const Layout = Component.Layout ?? MainLayout;
+
   return (
     <Provider store={store}>
-      <MainLayout>
+      <Layout>
         <Component {...pageProps} />
-      </MainLayout>
+      </Layout>
     </Provider>
   );
 }
