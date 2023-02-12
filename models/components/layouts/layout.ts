@@ -7,7 +7,8 @@ export interface LayoutProps {
 }
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  Layout?: () => ReactElement;
+  // eslint-disable-next-line no-unused-vars
+  Layout?: ({ children }: LayoutProps) => ReactElement;
 };
 
 export type AppPropsWithLayout = AppProps & {
