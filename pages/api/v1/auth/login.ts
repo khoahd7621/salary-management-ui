@@ -1,11 +1,15 @@
 import Cookies from 'cookies';
 import httpProxy, { ProxyResCallback } from 'http-proxy';
-import type { NextApiRequest, NextApiResponse } from 'next';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-type Data = {
-  message: string;
-};
+import { UserResponse } from '~/modules/login/models/UserResponse';
+
+type Data =
+  | {
+      message: string;
+    }
+  | UserResponse;
 
 export const config = {
   api: {
@@ -41,20 +45,22 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
               .json({ message: 'Username or password is invalid' });
           }
 
-          const { data, _statusCode, _message } = JSON.parse(body);
+          const { data } = JSON.parse(body);
 
-          const _tokenDecoded: JwtPayload = jwt_decode(data.token);
+          const tokenDecoded: JwtPayload = jwt_decode(data.token);
+          console.log(tokenDecoded.exp);
 
           // convert token to cookies
           const cookies = new Cookies(req, res, { secure: process.env.NODE_ENV !== 'development' });
           cookies.set('access_token', data.token, {
             httpOnly: true,
             sameSite: 'lax',
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-            // expires: new Date(_tokenDecoded.exp || Date.now() + 1000 * 60 * 60 * 24 * 7),
+            expires: new Date(1000 * (tokenDecoded.exp || Date.now())),
           });
 
-          (res as NextApiResponse).status(200).json({ message: 'Login successfully' });
+          (res as NextApiResponse)
+            .status(200)
+            .json({ id: data.id, name: data.name, phoneNumber: data.phoneNumber, userName: data.userName });
         } catch (error) {
           (res as NextApiResponse).status(500).json({ message: 'Something went wrong' });
         } finally {

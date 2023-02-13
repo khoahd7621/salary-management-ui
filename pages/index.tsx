@@ -3,10 +3,11 @@ import { Button, Form, Input, Space, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import { SubLayout } from '~/components/layouts';
 import { Seo } from '~/components';
+import { SubLayout } from '~/components/layouts';
 import { NextPageWithLayout } from '~/models/components/layouts';
 import { LoginPayload } from '~/modules/login/models/loginPayload';
+import { UserResponse } from '~/modules/login/models/UserResponse';
 import { login } from '~/modules/login/services/authService';
 
 const LoginPage: NextPageWithLayout = () => {
@@ -16,7 +17,7 @@ const LoginPage: NextPageWithLayout = () => {
   const handleLogin = async (values: LoginPayload) => {
     setIsSending(true);
     try {
-      await login(values);
+      const _response: UserResponse = await login(values);
       router.push('/dashboard');
     } catch (error) {
       console.log(error);
