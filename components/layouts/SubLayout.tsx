@@ -7,7 +7,7 @@ export const SubLayout = ({ children }: LayoutProps): React.ReactElement => {
 
   return (
     <Space className="w-full" direction="vertical">
-      <Layout className="min-h-screen">
+      <Layout className="!min-h-screen">
         <Header className="flex items-center">
           <Typography.Title className="!text-white !m-0" level={3}>
             OT & Salary Management

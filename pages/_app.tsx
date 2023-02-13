@@ -1,4 +1,5 @@
 import { Provider } from 'react-redux';
+import { StyleProvider } from '@ant-design/cssinjs';
 
 import { MainLayout } from '~/components/layouts';
 import { AppPropsWithLayout } from '~/models/components/layouts';
@@ -12,9 +13,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <Provider store={store}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <StyleProvider hashPriority="high">
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </StyleProvider>
     </Provider>
   );
 }
