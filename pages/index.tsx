@@ -2,6 +2,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Space, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { Seo } from '~/components';
 import { SubLayout } from '~/components/layouts';
@@ -9,18 +10,24 @@ import { NextPageWithLayout } from '~/models/components/layouts';
 import { LoginPayload } from '~/modules/login/models/loginPayload';
 import { UserResponse } from '~/modules/login/models/UserResponse';
 import { login } from '~/modules/login/services/authService';
+import { useAppDispatch } from '~/redux/hooks';
+import { login as dispatchActionLogin } from '~/redux/slices/authSlice';
 
 const LoginPage: NextPageWithLayout = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [isSending, setIsSending] = useState(false);
 
   const handleLogin = async (values: LoginPayload) => {
     setIsSending(true);
     try {
-      const _response: UserResponse = await login(values);
+      const response: UserResponse = await login(values);
+      dispatch(dispatchActionLogin(response));
       router.push('/dashboard');
-    } catch (error) {
+      toast.success('Login successfully');
+    } catch (error: any) {
       console.log(error);
+      toast.error(error.message || 'Login failed');
     }
     setIsSending(false);
   };

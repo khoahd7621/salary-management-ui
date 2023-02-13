@@ -7,6 +7,8 @@ import { store } from '~/redux/store';
 
 import 'antd/dist/reset.css';
 import '~/styles/globals.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const Layout = Component.Layout ?? MainLayout;
@@ -16,6 +18,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <StyleProvider hashPriority="high">
         <Layout>
           <Component {...pageProps} />
+
+          <ToastContainer />
         </Layout>
       </StyleProvider>
     </Provider>
