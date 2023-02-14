@@ -48,7 +48,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
           const { data } = JSON.parse(body);
 
           const tokenDecoded: JwtPayload = jwt_decode(data.token);
-          console.log(tokenDecoded.exp);
 
           // convert token to cookies
           const cookies = new Cookies(req, res, { secure: process.env.NODE_ENV !== 'development' });
