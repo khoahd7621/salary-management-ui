@@ -3,6 +3,7 @@ import { Layout, Menu, MenuProps, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import { LayoutProps } from '~/models/layouts';
+import styles from '~/styles/layout/main.module.scss';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -29,9 +30,8 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
   }, []);
 
   return (
-    <Layout className="h-screen">
+    <Layout style={{ height: '100vh' }}>
       <Sider
-        className="overflow-auto h-screen fixed left-0 top-0 bottom-0"
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -40,26 +40,48 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
           if (broken) setCollapsed(true);
           else setCollapsed(false);
         }}
+        style={{
+          overflow: 'auto',
+          height: '100vh',
+        }}
       >
         <Typography.Title
           level={5}
-          className="h-8 m-4 bg-[#ffffff4d] !text-white !text-sm text-center !leading-8 text-ellipsis overflow-hidden"
+          style={{
+            height: '32px',
+            margin: '16px',
+            backgroundColor: 'rgba(255, 255, 255, 0.3)',
+            color: '#fff',
+            fontSize: '14px',
+            textAlign: 'center',
+            lineHeight: '32px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
         >
           OT & Salary
         </Typography.Title>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={items} />
       </Sider>
       <Layout>
-        <Header className="!bg-white !p-0">
+        <Header style={{ backgroundColor: '#fff', padding: 0 }}>
           {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className:
-              'py-0 px-6 text-xl leading-[64px] cursor-pointer transition-colors duration-300 hover:text-[#1890ff]',
+            className: styles['menu-icon'],
             onClick: () => setCollapsed((collapsed) => !collapsed),
           })}
         </Header>
-        <Space className="overflow-auto" direction="vertical">
-          <Content className="bg-white mt-6 mx-4 p-6">{children}</Content>
-          <Footer className="text-center">
+        <Space style={{ overflow: 'auto' }} direction="vertical">
+          <Content
+            style={{
+              backgroundColor: '#fff',
+              margin: '0 16px',
+              marginTop: '24px',
+              padding: '24px',
+            }}
+          >
+            {children}
+          </Content>
+          <Footer style={{ textAlign: 'center' }}>
             Copyright &#169; {new Date().getFullYear()}. Powered by Secret Billionaire. All right reserved.
           </Footer>
         </Space>

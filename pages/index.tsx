@@ -41,8 +41,18 @@ const LoginPage: NextPageWithLayout = () => {
         }}
       />
 
-      <div className="max-w-md mt-8 mx-auto p-4 bg-white border rounded-md border-solid border-gray-400">
-        <Typography.Title level={3} className="text-center !mb-8">
+      <div
+        style={{
+          maxWidth: '28rem',
+          margin: '0 auto',
+          marginTop: '32px',
+          padding: '16px',
+          backgroundColor: '#fff',
+          border: '1px solid #d9d9d9',
+          borderRadius: '6px',
+        }}
+      >
+        <Typography.Title level={3} style={{ textAlign: 'center', marginBottom: '32px' }}>
           Login
         </Typography.Title>
         <Form
@@ -51,7 +61,7 @@ const LoginPage: NextPageWithLayout = () => {
           }}
           onFinish={handleLogin}
         >
-          <Space className="w-full" direction="vertical" size="small">
+          <Space style={{ width: '100%' }} direction="vertical" size="small">
             <Form.Item
               name="username"
               rules={[

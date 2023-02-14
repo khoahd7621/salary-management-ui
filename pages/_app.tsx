@@ -8,7 +8,7 @@ import { store } from '~/redux/store';
 
 import 'antd/dist/reset.css';
 import 'react-toastify/dist/ReactToastify.css';
-import '~/styles/globals.css';
+import '~/styles/globals.scss';
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const Layout = Component.Layout ?? MainLayout;
