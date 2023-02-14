@@ -3,13 +3,13 @@ import httpProxy, { ProxyResCallback } from 'http-proxy';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { UserResponse } from '~/modules/login/models/UserResponse';
+import { User } from '~/models/modules/login';
 
 type Data =
   | {
       message: string;
     }
-  | UserResponse;
+  | User;
 
 export const config = {
   api: {

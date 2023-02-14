@@ -1,14 +1,14 @@
-import { Provider } from 'react-redux';
 import { StyleProvider } from '@ant-design/cssinjs';
+import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 
-import { MainLayout } from '~/components/layouts';
-import { AppPropsWithLayout } from '~/models/components/layouts';
+import { MainLayout } from '~/layouts';
+import { AppPropsWithLayout } from '~/models/layouts';
 import { store } from '~/redux/store';
 
 import 'antd/dist/reset.css';
-import '~/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
+import '~/styles/globals.css';
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const Layout = Component.Layout ?? MainLayout;

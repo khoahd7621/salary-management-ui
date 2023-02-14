@@ -1,4 +1,4 @@
-import { NextPageWithLayout } from '~/models/components/layouts';
+import { NextPageWithLayout } from '~/models/layouts';
 
 const DashboardPage: NextPageWithLayout = () => {
   return <div>Dashboard</div>;

@@ -1,6 +1,6 @@
 import { Layout, Space, Typography } from 'antd';
 
-import { LayoutProps } from '~/models/components/layouts';
+import { LayoutProps } from '~/models/layouts';
 
 export const SubLayout = ({ children }: LayoutProps): React.ReactElement => {
   const { Header, Content, Footer } = Layout;
@@ -13,7 +13,7 @@ export const SubLayout = ({ children }: LayoutProps): React.ReactElement => {
             OT & Salary Management
           </Typography.Title>
         </Header>
-        <Content className="flex-grow">{children}</Content>
+        <Content className="!flex-grow">{children}</Content>
         <Footer className="!bg-gray-900 !text-white text-center">
           Copyright &#169; {new Date().getFullYear()}. Powered by Secret Billionaire. All right reserved.
         </Footer>

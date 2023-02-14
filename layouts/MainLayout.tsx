@@ -2,7 +2,7 @@ import { DashboardOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-de
 import { Layout, Menu, MenuProps, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-import { LayoutProps } from '~/models/components/layouts';
+import { LayoutProps } from '~/models/layouts';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
