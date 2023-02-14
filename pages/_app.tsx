@@ -1,7 +1,9 @@
 import { StyleProvider } from '@ant-design/cssinjs';
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
+import { SWRConfig } from 'swr/_internal';
 
+import axiosClient from '~/api-clients/axios-client';
 import { MainLayout } from '~/layouts';
 import { AppPropsWithLayout } from '~/models/layouts';
 import { store } from '~/redux/store';
@@ -17,7 +19,14 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     <Provider store={store}>
       <StyleProvider hashPriority="high">
         <Layout>
-          <Component {...pageProps} />
+          <SWRConfig
+            value={{
+              fetcher: (url) => axiosClient.get(url),
+              shouldRetryOnError: false,
+            }}
+          >
+            <Component {...pageProps} />
+          </SWRConfig>
 
           <ToastContainer />
         </Layout>
