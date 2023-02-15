@@ -8,7 +8,7 @@ import { Payload, User } from '~/models/modules/login';
 
 export const useAuth = (options?: Partial<PublicConfiguration>) => {
   const { data, error, mutate } = useSWR('/auth/profile', {
-    dedupingInterval: 60 * 60 * 1000,
+    dedupingInterval: 60 * 60 * 24 * 1000,
     revalidateOnFocus: false,
     ...options,
   });
@@ -23,10 +23,17 @@ export const useAuth = (options?: Partial<PublicConfiguration>) => {
     return response;
   }
 
+  async function logout() {
+    await authApi.logout();
+
+    mutate({}, false);
+  }
+
   return {
-    profile: data?.data || {},
+    profile: data?.data || undefined,
     error,
     login,
     firstLoading,
+    logout,
   };
 };

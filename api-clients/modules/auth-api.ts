@@ -5,4 +5,7 @@ export const authApi = {
   login: (payload: Payload): Promise<User> => {
     return axiosClient.post('/auth/login', payload);
   },
+  logout() {
+    return axiosClient.post('/auth/logout');
+  },
 };
