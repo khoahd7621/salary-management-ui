@@ -17,8 +17,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
+import { AuthPage } from '~/components';
 import { useAuth } from '~/hooks';
 import { LayoutProps } from '~/models/layouts';
+
 import styles from '~/styles/layout/main.module.scss';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -201,7 +203,7 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
               padding: '24px',
             }}
           >
-            {children}
+            <AuthPage>{children}</AuthPage>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
             Copyright &#169; {new Date().getFullYear()}. Powered by Secret Billionaire. All right reserved.

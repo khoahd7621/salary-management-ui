@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { companyApi } from '~/api-clients/modules/company-api';
-import { AuthPage, Seo } from '~/components';
+import { Seo } from '~/components';
 
 export interface CompanyFrom {
   companyName: string;
@@ -27,7 +27,7 @@ export default function CreateCompanyPage() {
   };
 
   return (
-    <AuthPage>
+    <>
       <Seo
         data={{
           title: 'Create Company | OT & Salary Management',
@@ -70,6 +70,6 @@ export default function CreateCompanyPage() {
           </Space>
         </Form>
       </Space>
-    </AuthPage>
+    </>
   );
 }

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { companyApi } from '~/api-clients/modules/company-api';
 
-import { AuthPage, Seo } from '~/components';
+import { Seo } from '~/components';
 import { TableParams } from '~/models/components/Table';
 import { NextPageWithLayout } from '~/models/layouts';
 import { Company } from '~/models/modules/companies';
@@ -93,7 +93,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
   };
 
   return (
-    <AuthPage>
+    <>
       <Seo
         data={{
           title: 'Companies | OT & Salary Management',
@@ -122,7 +122,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
           />
         </section>
       </Space>
-    </AuthPage>
+    </>
   );
 };
 

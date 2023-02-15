@@ -1,9 +1,9 @@
-import { AuthPage, Seo } from '~/components';
+import { Seo } from '~/components';
 import { NextPageWithLayout } from '~/models/layouts';
 
 const LogOvertimesListPage: NextPageWithLayout = () => {
   return (
-    <AuthPage>
+    <>
       <Seo
         data={{
           title: 'Overtimes | OT & Salary Management',
@@ -13,7 +13,7 @@ const LogOvertimesListPage: NextPageWithLayout = () => {
       />
 
       <h1>This feature will be released soon. Please, comeback later.</h1>
-    </AuthPage>
+    </>
   );
 };
 
