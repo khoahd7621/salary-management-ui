@@ -5,4 +5,7 @@ export const companyApi = {
   getAll: (): Promise<Company[]> => {
     return axiosClient.get('/companys/getAllCompanys');
   },
+  create: (companyName: string) => {
+    return axiosClient.post('/companys/addCompany', { company_name: companyName });
+  },
 };

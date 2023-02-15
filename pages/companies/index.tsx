@@ -1,6 +1,7 @@
 import { Button, Space, Table, Typography } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import type { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/es/table/interface';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { companyApi } from '~/api-clients/modules/company-api';
@@ -104,9 +105,11 @@ const CompaniesListPage: NextPageWithLayout = () => {
       <Space style={{ width: '100%' }} direction="vertical" size="large">
         <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography.Title level={3}>List companies</Typography.Title>
-          <Button type="primary" ghost>
-            Create new company
-          </Button>
+          <Link href="/companies/create" passHref>
+            <Button type="primary" ghost>
+              Create new company
+            </Button>
+          </Link>
         </section>
         <section>
           <Table
