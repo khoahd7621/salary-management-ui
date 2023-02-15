@@ -1,7 +1,7 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, Button, Form, Input, Space, Typography } from 'antd';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { Seo } from '~/components';
 import { ProtectedLogin } from '~/components/ProtectedLogin';
@@ -14,7 +14,6 @@ import { login as dispatchActionLogin } from '~/redux/slices/authSlice';
 
 const LoginPage: NextPageWithLayout = () => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -26,7 +25,7 @@ const LoginPage: NextPageWithLayout = () => {
     try {
       const response: User = await login(values);
       dispatch(dispatchActionLogin(response));
-      router.push('/dashboard');
+      toast('Hello there');
     } catch (error: any) {
       console.log(error);
       setErrorMessage('Invalid username or password' || error.message);

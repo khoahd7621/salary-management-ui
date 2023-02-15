@@ -1,14 +1,14 @@
 import { AuthPage, Seo } from '~/components';
 import { NextPageWithLayout } from '~/models/layouts';
 
-const DashboardPage: NextPageWithLayout = () => {
+const LogLeavesListPage: NextPageWithLayout = () => {
   return (
     <AuthPage>
       <Seo
         data={{
-          title: 'Dashboard | OT & Salary Management',
-          description: 'Dashboard page',
-          url: `${process.env.HOST_URL}/dashboard`,
+          title: 'Leaves | OT & Salary Management',
+          description: 'List log leaves page',
+          url: `${process.env.HOST_URL}/leaves`,
         }}
       />
 
@@ -17,4 +17,4 @@ const DashboardPage: NextPageWithLayout = () => {
   );
 };
 
-export default DashboardPage;
+export default LogLeavesListPage;

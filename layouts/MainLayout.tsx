@@ -1,12 +1,20 @@
 import {
   DashboardOutlined,
   DownOutlined,
+  FileDoneOutlined,
+  GlobalOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  MoneyCollectOutlined,
+  NodeExpandOutlined,
+  ScheduleOutlined,
   SmileOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Layout, Menu, Space, Typography } from 'antd';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 import { useAuth } from '~/hooks';
@@ -15,23 +23,85 @@ import styles from '~/styles/layout/main.module.scss';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const getItem = (label: React.ReactNode, key: React.Key, icon?: React.ReactNode, children?: MenuItem[]): MenuItem => ({
-  key,
-  icon,
-  children,
-  label,
-});
-
-const itemsMenu: MenuItem[] = [
-  getItem('Dashboard', '1', <DashboardOutlined />),
-  getItem('Option', '2', <DashboardOutlined />, [getItem('Inner option 1', '3'), getItem('Inner option 2', '4')]),
-];
+type CurrentItem = {
+  index: number;
+  key: string;
+};
 
 export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
+  const router = useRouter();
   const { Header, Content, Sider, Footer } = Layout;
   const { logout } = useAuth();
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [currentMenuItem, setCurrentMenuItem] = useState<CurrentItem>({
+    index: 0,
+    key: '',
+  });
+
+  const getItem = (
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[]
+  ): MenuItem => ({
+    key,
+    icon,
+    children,
+    label,
+  });
+
+  const itemsMenu: MenuItem[] = [
+    getItem(
+      'Dashboard',
+      '/dashboard',
+      <Link href="/dashboard" passHref>
+        <DashboardOutlined />
+      </Link>
+    ),
+    getItem(
+      'Manage Companies',
+      '/companies',
+      <Link href="/companies" passHref>
+        <GlobalOutlined />
+      </Link>
+    ),
+    getItem(
+      'Manage Employees',
+      '/employees',
+      <Link href="/employees" passHref>
+        <TeamOutlined />
+      </Link>
+    ),
+    getItem(
+      'Manage Contracts',
+      '/contracts',
+      <Link href="/contracts" passHref>
+        <FileDoneOutlined />
+      </Link>
+    ),
+    getItem(
+      'Log OT',
+      '/overtimes',
+      <Link href="/overtimes" passHref>
+        <NodeExpandOutlined />
+      </Link>
+    ),
+    getItem(
+      'Log Leave',
+      '/leaves',
+      <Link href="/leaves" passHref>
+        <ScheduleOutlined />
+      </Link>
+    ),
+    getItem(
+      'Create Salary',
+      '/salaries',
+      <Link href="/salaries" passHref>
+        <MoneyCollectOutlined />
+      </Link>
+    ),
+  ];
 
   const items: MenuProps['items'] = [
     {
@@ -45,6 +115,18 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
     if (window.innerWidth < 992) setCollapsed(true);
     else setCollapsed(false);
   }, []);
+
+  useEffect(() => {
+    for (let i = 0; i < itemsMenu.length; i++) {
+      if (itemsMenu[i]?.key === router.asPath) {
+        setCurrentMenuItem({
+          index: i,
+          key: `${itemsMenu[i]?.key}`,
+        });
+        return;
+      }
+    }
+  }, [router.asPath]);
 
   return (
     <Layout style={{ height: '100vh' }}>
@@ -78,7 +160,13 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
         >
           OT & Salary
         </Typography.Title>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={itemsMenu} />
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[`${currentMenuItem.key}`]}
+          defaultSelectedKeys={[`${currentMenuItem.key}`]}
+          items={itemsMenu}
+        />
       </Sider>
       <Layout>
         <Header
