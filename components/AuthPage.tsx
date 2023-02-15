@@ -13,12 +13,12 @@ export const AuthPage = ({ children }: AuthProps) => {
   const { profile, firstLoading } = useAuth();
 
   useEffect(() => {
-    if (!firstLoading && !profile?.id) {
+    if (!firstLoading && !profile?.adminId) {
       router.push('/');
     }
   }, [router, profile, firstLoading]);
 
-  if (!profile?.id) return <Loading />;
+  if (!profile?.adminId) return <Loading />;
 
   return <>{children}</>;
 };

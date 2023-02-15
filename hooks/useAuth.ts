@@ -4,7 +4,8 @@ import useSWR from 'swr';
 import { PublicConfiguration } from 'swr/_internal';
 
 import { authApi } from '~/api-clients/modules/auth-api';
-import { Payload, User } from '~/models/modules/login';
+import { Payload } from '~/models/modules/login';
+import { User } from '~/models/modules/User';
 
 export const useAuth = (options?: Partial<PublicConfiguration>) => {
   const { data, error, mutate } = useSWR('/auth/profile', {
@@ -30,7 +31,7 @@ export const useAuth = (options?: Partial<PublicConfiguration>) => {
   }
 
   return {
-    profile: data?.data || undefined,
+    profile: data || undefined,
     error,
     login,
     firstLoading,

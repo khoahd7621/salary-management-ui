@@ -16,7 +16,7 @@ export const ProtectedLogin = ({ children }: AuthProps) => {
   });
 
   useEffect(() => {
-    if (!firstLoading && profile?.id && !error) {
+    if (!firstLoading && profile?.adminId && !error) {
       router.push('/dashboard');
     }
   }, [router, profile, firstLoading, error]);

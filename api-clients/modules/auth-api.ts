@@ -1,4 +1,5 @@
-import { Payload, User } from '~/models/modules/login';
+import { Payload } from '~/models/modules/login';
+import { User } from '~/models/modules/User';
 import axiosClient from '../axios-client';
 
 export const authApi = {

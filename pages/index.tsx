@@ -1,14 +1,14 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, Button, Form, Input, Space, Typography } from 'antd';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { Seo } from '~/components';
 import { ProtectedLogin } from '~/components/ProtectedLogin';
 import { useAuth } from '~/hooks';
 import { SubLayout } from '~/layouts';
 import { NextPageWithLayout } from '~/models/layouts';
-import { Payload, User } from '~/models/modules/login';
+import { Payload } from '~/models/modules/login';
+import { User } from '~/models/modules/User';
 import { useAppDispatch } from '~/redux/hooks';
 import { login as dispatchActionLogin } from '~/redux/slices/authSlice';
 
@@ -25,7 +25,6 @@ const LoginPage: NextPageWithLayout = () => {
     try {
       const response: User = await login(values);
       dispatch(dispatchActionLogin(response));
-      toast('Hello there');
     } catch (error: any) {
       console.log(error);
       setErrorMessage('Invalid username or password' || error.message);
@@ -87,7 +86,7 @@ const LoginPage: NextPageWithLayout = () => {
                     message: 'Please input your Password!',
                   },
                   {
-                    min: 3,
+                    min: 6,
                     message: 'Password must be at least 6 characters',
                   },
                 ]}
