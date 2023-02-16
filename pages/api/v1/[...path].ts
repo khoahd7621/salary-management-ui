@@ -1,12 +1,15 @@
 import Cookies from 'cookies';
 import httpProxy from 'http-proxy';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import getConfig from 'next/config';
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+const { publicRuntimeConfig } = getConfig();
 
 const proxy = httpProxy.createProxyServer();
 
@@ -21,7 +24,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<any>) 
     req.headers.cookie = '';
 
     proxy.web(req, res, {
-      target: process.env.API_HOST_URL,
+      target: publicRuntimeConfig.API_HOST_URL,
       changeOrigin: true,
       selfHandleResponse: false,
     });

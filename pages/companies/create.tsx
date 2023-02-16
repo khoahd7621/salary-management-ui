@@ -3,9 +3,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import getConfig from 'next/config';
 
 import { companyApi } from '~/api-clients/modules/company-api';
 import { Seo } from '~/components';
+
+const { publicRuntimeConfig } = getConfig();
 
 export interface CompanyFrom {
   companyName: string;
@@ -32,7 +35,7 @@ export default function CreateCompanyPage() {
         data={{
           title: 'Create Company | OT & Salary Management',
           description: 'Create company page',
-          url: `${process.env.HOST_URL}/companies/create`,
+          url: `${publicRuntimeConfig.HOST_URL}/companies/create`,
         }}
       />
       <Space style={{ width: '100%' }} direction="vertical" size="middle">

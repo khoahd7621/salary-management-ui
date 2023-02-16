@@ -1,6 +1,7 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, Button, Form, Input, Space, Typography } from 'antd';
 import { useState } from 'react';
+import getConfig from 'next/config';
 
 import { Seo } from '~/components';
 import { ProtectedLogin } from '~/components/ProtectedLogin';
@@ -11,6 +12,8 @@ import { Payload } from '~/models/modules/login';
 import { User } from '~/models/modules/User';
 import { useAppDispatch } from '~/redux/hooks';
 import { login as dispatchActionLogin } from '~/redux/slices/authSlice';
+
+const { publicRuntimeConfig } = getConfig();
 
 const LoginPage: NextPageWithLayout = () => {
   const dispatch = useAppDispatch();
@@ -39,7 +42,7 @@ const LoginPage: NextPageWithLayout = () => {
           data={{
             title: 'Login',
             description: 'Login page',
-            url: `${process.env.HOST_URL}`,
+            url: `${publicRuntimeConfig.HOST_URL}`,
           }}
         />
 

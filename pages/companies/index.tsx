@@ -1,11 +1,12 @@
 import { Button, Space, Table, Typography } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import type { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/es/table/interface';
+import getConfig from 'next/config';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { companyApi } from '~/api-clients/modules/company-api';
 
+import { companyApi } from '~/api-clients/modules/company-api';
 import { Seo } from '~/components';
 import { TableParams } from '~/models/components/Table';
 import { NextPageWithLayout } from '~/models/layouts';
@@ -48,6 +49,8 @@ const columns: ColumnsType<DataType> = [
     ),
   },
 ];
+
+const { publicRuntimeConfig } = getConfig();
 
 const CompaniesListPage: NextPageWithLayout = () => {
   const [data, setData] = useState<DataType[]>();
@@ -98,7 +101,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
         data={{
           title: 'Companies | OT & Salary Management',
           description: 'List companies page',
-          url: `${process.env.HOST_URL}/companies`,
+          url: `${publicRuntimeConfig.HOST_URL}/companies`,
         }}
       />
 

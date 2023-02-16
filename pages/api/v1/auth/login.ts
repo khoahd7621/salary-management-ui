@@ -2,6 +2,7 @@ import Cookies from 'cookies';
 import httpProxy, { ProxyResCallback } from 'http-proxy';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import getConfig from 'next/config';
 
 import { Response } from '~/models/modules/login';
 import { User } from '~/models/modules/User';
@@ -19,6 +20,8 @@ export const config = {
 };
 
 const proxy = httpProxy.createProxyServer();
+
+const { publicRuntimeConfig } = getConfig();
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   if (req.method !== 'POST') {
@@ -77,7 +80,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
     // Forward the request to the target API
     proxy.web(req, res, {
-      target: process.env.API_HOST_URL,
+      target: publicRuntimeConfig.API_HOST_URL,
       changeOrigin: true,
       selfHandleResponse: true,
     });
