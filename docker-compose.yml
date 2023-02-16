@@ -2,9 +2,6 @@ version: '3.8'
 
 services:
   salary-management-ui-nextjs:
-    image: salary-management-ui
-    build: .
+    image: ghcr.io/khoahd7621/salary-management-ui:main
     ports:
       - 3080:3000
-    env_file:
-      - application.env
