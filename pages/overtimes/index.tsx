@@ -3,7 +3,7 @@ import getConfig from 'next/config';
 import { Seo } from '~/components';
 import { NextPageWithLayout } from '~/models/layouts';
 
-const { publicRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 
 const LogOvertimesListPage: NextPageWithLayout = () => {
   return (
@@ -12,7 +12,7 @@ const LogOvertimesListPage: NextPageWithLayout = () => {
         data={{
           title: 'Overtimes | OT & Salary Management',
           description: 'List log overtimes page',
-          url: `${publicRuntimeConfig.HOST_URL}/overtimes`,
+          url: `${serverRuntimeConfig.HOST_URL}/overtimes`,
         }}
       />
 

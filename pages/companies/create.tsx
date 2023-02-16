@@ -8,7 +8,7 @@ import getConfig from 'next/config';
 import { companyApi } from '~/api-clients/modules/company-api';
 import { Seo } from '~/components';
 
-const { publicRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 
 export interface CompanyFrom {
   companyName: string;
@@ -35,7 +35,7 @@ export default function CreateCompanyPage() {
         data={{
           title: 'Create Company | OT & Salary Management',
           description: 'Create company page',
-          url: `${publicRuntimeConfig.HOST_URL}/companies/create`,
+          url: `${serverRuntimeConfig.HOST_URL}/companies/create`,
         }}
       />
       <Space style={{ width: '100%' }} direction="vertical" size="middle">

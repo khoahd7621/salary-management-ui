@@ -2,7 +2,7 @@ import getConfig from 'next/config';
 import { Seo } from '~/components';
 import { NextPageWithLayout } from '~/models/layouts';
 
-const { publicRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 
 const LogLeavesListPage: NextPageWithLayout = () => {
   return (
@@ -11,7 +11,7 @@ const LogLeavesListPage: NextPageWithLayout = () => {
         data={{
           title: 'Leaves | OT & Salary Management',
           description: 'List log leaves page',
-          url: `${publicRuntimeConfig.HOST_URL}/leaves`,
+          url: `${serverRuntimeConfig.HOST_URL}/leaves`,
         }}
       />
 

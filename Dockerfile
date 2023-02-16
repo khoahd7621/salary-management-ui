@@ -20,6 +20,9 @@ FROM node:16-alpine AS builder
 
 ENV NODE_ENV production
 
+ARG API_HOST_URL=""
+ARG HOST_URL=""
+
 WORKDIR /app
 
 # Copy the entire project to the container

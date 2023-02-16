@@ -50,7 +50,7 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const { publicRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 
 const CompaniesListPage: NextPageWithLayout = () => {
   const [data, setData] = useState<DataType[]>();
@@ -101,7 +101,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
         data={{
           title: 'Companies | OT & Salary Management',
           description: 'List companies page',
-          url: `${publicRuntimeConfig.HOST_URL}/companies`,
+          url: `${serverRuntimeConfig.HOST_URL}/companies`,
         }}
       />
 

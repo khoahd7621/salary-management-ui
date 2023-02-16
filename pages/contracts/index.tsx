@@ -3,7 +3,7 @@ import getConfig from 'next/config';
 import { Seo } from '~/components';
 import { NextPageWithLayout } from '~/models/layouts';
 
-const { publicRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 
 const ContractsListPage: NextPageWithLayout = () => {
   return (
@@ -12,7 +12,7 @@ const ContractsListPage: NextPageWithLayout = () => {
         data={{
           title: 'Contracts | OT & Salary Management',
           description: 'List contracts page',
-          url: `${publicRuntimeConfig.HOST_URL}/contracts`,
+          url: `${serverRuntimeConfig.HOST_URL}/contracts`,
         }}
       />
 

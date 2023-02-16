@@ -13,7 +13,7 @@ import { User } from '~/models/modules/User';
 import { useAppDispatch } from '~/redux/hooks';
 import { login as dispatchActionLogin } from '~/redux/slices/authSlice';
 
-const { publicRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 
 const LoginPage: NextPageWithLayout = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ const LoginPage: NextPageWithLayout = () => {
           data={{
             title: 'Login',
             description: 'Login page',
-            url: `${publicRuntimeConfig.HOST_URL}`,
+            url: `${serverRuntimeConfig.HOST_URL}`,
           }}
         />
 

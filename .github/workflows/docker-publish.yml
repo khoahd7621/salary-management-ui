@@ -14,14 +14,11 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  API_HOST_URL: ${{ vars.API_HOST_URL }}
-  HOST_URL: ${{ vars.HOST_URL }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-      name: production
+    environment: Production
     permissions:
       contents: read
       packages: write
@@ -59,11 +56,14 @@ jobs:
         id: build-and-push
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v3
+        env:
+          API_HOST_URL: ${{ vars.API_HOST_URL }}
+          HOST_URL: ${{ vars.HOST_URL }}
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            API_HOST_URL=${{ env.API_HOST_URL }}
-            HOST_URL=${{ env.HOST_URL }}
+            API_HOST_URL=$API_HOST_URL
+            HOST_URL=$HOST_URL

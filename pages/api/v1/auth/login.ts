@@ -21,7 +21,7 @@ export const config = {
 
 const proxy = httpProxy.createProxyServer();
 
-const { publicRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   if (req.method !== 'POST') {
@@ -80,7 +80,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
     // Forward the request to the target API
     proxy.web(req, res, {
-      target: publicRuntimeConfig.API_HOST_URL,
+      target: serverRuntimeConfig.API_HOST_URL,
       changeOrigin: true,
       selfHandleResponse: true,
     });

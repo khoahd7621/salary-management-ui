@@ -9,7 +9,7 @@ export const config = {
   },
 };
 
-const { publicRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 
 const proxy = httpProxy.createProxyServer();
 
@@ -24,7 +24,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<any>) 
     req.headers.cookie = '';
 
     proxy.web(req, res, {
-      target: publicRuntimeConfig.API_HOST_URL,
+      target: serverRuntimeConfig.API_HOST_URL,
       changeOrigin: true,
       selfHandleResponse: false,
     });
