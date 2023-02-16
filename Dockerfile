@@ -23,6 +23,10 @@ ENV NODE_ENV production
 ARG API_HOST_URL=""
 ARG HOST_URL=""
 
+# Appends to .env.production
+RUN printf "$API_HOST_URL" >> .env.production
+RUN printf "$HOST_URL" >> .env.production
+
 WORKDIR /app
 
 # Copy the entire project to the container
