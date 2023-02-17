@@ -51,6 +51,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
     {
       title: 'Action',
       dataIndex: 'action',
+      width: '20%',
       render: (_text, record) => {
         return (
           <Space>
@@ -134,6 +135,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
         </section>
         <section>
           <Table
+            scroll={{ x: 800 }}
             columns={columns}
             rowKey={(record) => record.companyId}
             dataSource={data}
