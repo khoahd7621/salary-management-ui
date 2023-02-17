@@ -40,6 +40,13 @@ jobs:
       - run: npm run build
       - run: npm run lint
 
+      - name: SonarCloud Scan
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
