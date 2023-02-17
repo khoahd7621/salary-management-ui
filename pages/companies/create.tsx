@@ -10,7 +10,7 @@ import { Seo } from '~/components';
 
 const { serverRuntimeConfig } = getConfig();
 
-export interface CompanyFrom {
+export interface CompanyForm {
   companyName: string;
 }
 
@@ -18,7 +18,7 @@ export default function CreateCompanyPage() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onFinish = async ({ companyName }: CompanyFrom) => {
+  const onFinish = async ({ companyName }: CompanyForm) => {
     setLoading(true);
     try {
       await companyApi.create(companyName);
