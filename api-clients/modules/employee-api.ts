@@ -1,4 +1,4 @@
-import { CreateForm, Employee } from '~/models/modules/employees';
+import { Employee, PayloadCreate } from '~/models/modules/employees';
 import { UpdateForm } from '~/models/modules/employees/UpdateForm';
 import axiosClient from '../axios-client';
 
@@ -9,7 +9,7 @@ export const employeeApi = {
   getById: (employeeId: string): Promise<Employee> => {
     return axiosClient.get(`/employees/${employeeId}`);
   },
-  create: (employee: CreateForm) => {
+  create: (employee: PayloadCreate) => {
     return axiosClient.post('/employees', {
       employee_name: employee.employeeName,
       image: employee.image,

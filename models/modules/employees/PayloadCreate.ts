@@ -1,9 +1,7 @@
-import { Moment } from 'moment';
-
-export interface CreateForm {
+export interface PayloadCreate {
   employeeName: string;
   image: string;
-  dateOfBirth: Moment;
+  dateOfBirth: string;
   address: string;
   identifyNumber: number;
   phoneNumber: string;
