@@ -1,10 +1,9 @@
-import { Button, Space, Table, Typography } from 'antd';
+import { Button, message, Space, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import getConfig from 'next/config';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { employeeApi } from '~/api-clients/modules/employee-api';
 import { ButtonWithModal, Seo } from '~/components';
@@ -69,11 +68,12 @@ const EmployeesListPage: NextPageWithLayout = () => {
                 employeeApi
                   .delete(record.employeeId as string)
                   .then(() => {
-                    toast.success('Delete employee successfully!');
-                    // fetchData();
+                    message.success('Delete employee successfully!');
+                    fetchData();
                   })
-                  .catch(() => {
-                    toast.error('Something went wrong! Please refresh page and try again!');
+                  .catch((error) => {
+                    console.log(error);
+                    message.error('Something went wrong! Please refresh page and try again!');
                   });
               }}
             >
@@ -96,7 +96,7 @@ const EmployeesListPage: NextPageWithLayout = () => {
       setData(response);
     } catch (error) {
       console.log(error);
-      toast.error('Something went wrong! Please refresh the page and try again!');
+      message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
   };

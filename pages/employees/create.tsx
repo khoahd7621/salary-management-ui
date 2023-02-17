@@ -1,9 +1,8 @@
-import { Button, DatePicker, Form, Input, Space, Typography } from 'antd';
+import { Button, DatePicker, Form, Input, message, Space, Typography } from 'antd';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { employeeApi } from '~/api-clients/modules/employee-api';
 import { Seo } from '~/components';
@@ -22,10 +21,11 @@ export default function CreateEmployeePage() {
     setLoading(true);
     try {
       await employeeApi.create({ ...data, dateOfBirth: data.dateOfBirth.toISOString() });
-      toast.success('Create employee successfully!');
+      message.success('Create employee successfully!');
       router.push('/employees');
     } catch (error) {
-      toast.error('Something went wrong! Please refresh the page and try again!');
+      console.log(error);
+      message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
   };

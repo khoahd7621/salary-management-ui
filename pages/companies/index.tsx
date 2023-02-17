@@ -1,10 +1,9 @@
-import { Button, Space, Table, Typography } from 'antd';
+import { Button, message, Space, Table, Typography } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import type { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/es/table/interface';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { companyApi } from '~/api-clients/modules/company-api';
 import { ButtonWithModal, Seo } from '~/components';
@@ -65,11 +64,11 @@ const CompaniesListPage: NextPageWithLayout = () => {
                 companyApi
                   .delete(record.companyId)
                   .then(() => {
-                    toast.success('Delete company successfully!');
+                    message.success('Delete company successfully!');
                     fetchData();
                   })
                   .catch(() => {
-                    toast.error('Something went wrong! Please refresh page and try again!');
+                    message.error('Something went wrong! Please refresh page and try again!');
                   });
               }}
             >
@@ -92,7 +91,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
       setData(response);
     } catch (error) {
       console.log(error);
-      toast.error('Something went wrong! Please refresh the page and try again!');
+      message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
   };

@@ -1,9 +1,8 @@
-import { Button, Form, Input, Space, Typography } from 'antd';
+import { Button, Form, Input, message, Space, Typography } from 'antd';
+import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import getConfig from 'next/config';
 
 import { companyApi } from '~/api-clients/modules/company-api';
 import { Seo } from '~/components';
@@ -22,10 +21,10 @@ export default function CreateCompanyPage() {
     setLoading(true);
     try {
       await companyApi.create(companyName);
-      toast.success('Company created successfully!');
+      message.success('Company created successfully!');
       router.push('/companies');
     } catch (error) {
-      toast.error('Something went wrong! Please refresh the page and try again!');
+      message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
   };

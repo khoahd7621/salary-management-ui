@@ -1,9 +1,8 @@
-import { Button, Form, Input, Space, Typography } from 'antd';
+import { Button, Form, Input, message, Space, Typography } from 'antd';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { Seo } from '~/components';
 
 import { companyApi } from '~/api-clients/modules/company-api';
@@ -43,9 +42,16 @@ export default function EditCompany() {
     setSending(true);
     try {
       await companyApi.update(companyId as string, companyName);
+      message.success({
+        content: 'Edit company successfully!',
+        duration: 5,
+      });
       router.push('/companies');
     } catch (error) {
-      toast.error('Something went wrong! Please refresh the page and try again!');
+      message.error({
+        content: 'Something went wrong! Please refresh the page and try again!',
+        duration: 5,
+      });
     }
     setSending(false);
   };

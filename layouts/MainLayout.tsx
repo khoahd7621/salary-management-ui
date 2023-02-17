@@ -11,8 +11,7 @@ import {
   SmileOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Dropdown, Layout, Menu, Space, Typography } from 'antd';
+import { Button, Dropdown, Layout, Menu, MenuProps, message, Space, Typography } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -35,6 +34,7 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
   const { Header, Content, Sider, Footer } = Layout;
   const { logout } = useAuth();
 
+  const [isSending, setIsSending] = useState<boolean>(false);
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenuItem, setCurrentMenuItem] = useState<CurrentItem>({
     index: 0,
@@ -108,8 +108,24 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: <div onClick={() => logout()}>Logout</div>,
-      icon: <SmileOutlined />,
+      label: (
+        <Button
+          disabled={isSending}
+          onClick={() => {
+            setIsSending(true);
+            logout();
+            message.success({
+              content: 'Logout successfully',
+              duration: 3,
+            });
+            setIsSending(false);
+          }}
+          style={{ width: '100%', border: 'none' }}
+        >
+          <SmileOutlined />
+          Logout
+        </Button>
+      ),
     },
   ];
 
