@@ -1,10 +1,8 @@
-import { Moment } from 'moment';
-
-export interface UpdateForm {
+export interface PayloadUpdate {
   employeeId: string;
   employeeName: string;
   image: string;
-  dateOfBirth: Moment;
+  dateOfBirth: string;
   address: string;
   identifyNumber: number;
   phoneNumber: string;

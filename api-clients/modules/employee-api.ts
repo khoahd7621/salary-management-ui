@@ -1,5 +1,4 @@
-import { Employee, PayloadCreate } from '~/models/modules/employees';
-import { UpdateForm } from '~/models/modules/employees/UpdateForm';
+import { Employee, PayloadCreate, PayloadUpdate } from '~/models/modules/employees';
 import axiosClient from '../axios-client';
 
 export const employeeApi = {
@@ -19,7 +18,7 @@ export const employeeApi = {
       phoneNumber: employee.phoneNumber,
     });
   },
-  update: (employee: UpdateForm) => {
+  update: (employee: PayloadUpdate) => {
     return axiosClient.put('/employees/update', {
       id: employee.employeeId,
       employee_name: employee.employeeName,

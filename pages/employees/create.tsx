@@ -99,8 +99,8 @@ export default function CreateEmployeePage() {
               <Input />
             </Form.Item>
             <Form.Item
-              label="Identity number"
-              name="identityNumber"
+              label="Identify number"
+              name="identifyNumber"
               rules={[
                 { required: true, message: 'Please input identity number' },
                 {
