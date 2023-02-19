@@ -1,7 +1,7 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Alert, Button, Form, Input, Space, Typography } from 'antd';
-import { useState } from 'react';
+import { Alert, Button, Form, Input, message, Space, Typography } from 'antd';
 import getConfig from 'next/config';
+import { useState } from 'react';
 
 import { Seo } from '~/components';
 import { ProtectedLogin } from '~/components/ProtectedLogin';
@@ -28,9 +28,10 @@ const LoginPage: NextPageWithLayout = () => {
     try {
       const response: User = await login(values);
       dispatch(dispatchActionLogin(response));
-    } catch (error: any) {
+      message.success('Login successfully!');
+    } catch (error) {
       console.log(error);
-      setErrorMessage('Invalid username or password' || error.message);
+      setErrorMessage('Invalid username or password');
     }
     setIsSending(false);
   };

@@ -1,20 +1,21 @@
 import { Button, message, Space, Table, Typography } from 'antd';
-import { ColumnsType } from 'antd/es/table';
+import type { ColumnsType } from 'antd/es/table';
+import dayjs from 'dayjs';
 import getConfig from 'next/config';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import { employeeApi } from '~/api-clients/modules/employee-api';
+import { holidayApi } from '~/api-clients/modules/holiday-api';
 import { ButtonWithModal, Seo } from '~/components';
 import { TableParams } from '~/models/components/Table';
+import { AppRoutes } from '~/models/constants/Routes';
 import { NextPageWithLayout } from '~/models/layouts';
-import { Employee } from '~/models/modules/employees';
+import { Holiday } from '~/models/modules/holidays';
 
 const { serverRuntimeConfig } = getConfig();
 
-const EmployeesListPage: NextPageWithLayout = () => {
-  const [data, setData] = useState<Employee[]>();
+const HolidaysListPage: NextPageWithLayout = () => {
+  const [data, setData] = useState<Holiday[]>();
   const [loading, setLoading] = useState(false);
   const [tableParams, _setTableParams] = useState<TableParams>({
     pagination: {
@@ -23,21 +24,7 @@ const EmployeesListPage: NextPageWithLayout = () => {
     },
   });
 
-  const columns: ColumnsType<Employee> = [
-    {
-      title: 'Id',
-      dataIndex: 'employeeId',
-      sorter: (a, b) => (a.employeeId?.length || 0) - (b.employeeId?.length || 0),
-      width: '20%',
-      ellipsis: true,
-    },
-    {
-      title: 'Image',
-      dataIndex: 'image',
-      render: (_text, record) => <Image width={50} height={50} src={record.image || ''} alt={`${record.name}`} />,
-      sorter: false,
-      width: '10%',
-    },
+  const columns: ColumnsType<Holiday> = [
     {
       title: 'Name',
       dataIndex: 'name',
@@ -46,33 +33,40 @@ const EmployeesListPage: NextPageWithLayout = () => {
       ellipsis: true,
     },
     {
-      title: 'Number of contract',
-      dataIndex: 'contracts',
-      render: (_text, record) => record.contracts?.length || 0,
-      sorter: (a, b) => (a.contracts?.length || 0) - (b.contracts?.length || 0),
+      title: 'Start date',
+      dataIndex: 'startDate',
+      render: (_text, record) => dayjs(record.startDate).format('DD/MM/YYYY'),
+      sorter: (a, b) => dayjs(a.startDate).diff(b.startDate),
+      width: '20%',
+    },
+    {
+      title: 'End date',
+      dataIndex: 'endDate',
+      render: (_text, record) => dayjs(record.endDate).format('DD/MM/YYYY'),
+      sorter: (a, b) => dayjs(a.endDate).diff(b.endDate),
       width: '20%',
     },
     {
       title: 'Action',
       dataIndex: 'action',
+      width: '20%',
       render: (_text, record) => {
         return (
           <Space>
-            <Link href={`/employees/${record.employeeId}`}>
+            <Link href={`/${AppRoutes.holidays}/${record.holidayId}`}>
               <Button type="primary">Edit</Button>
             </Link>
             <ButtonWithModal
               modalTitle="Warning"
-              modalContent={`Are you sure to delete employee "${record.name}"`}
+              modalContent={`Are you sure to delete holiday "${record.name}"`}
               onOk={() => {
-                employeeApi
-                  .delete(record.employeeId as string)
+                holidayApi
+                  .delete(record.holidayId)
                   .then(() => {
-                    message.success('Delete employee successfully!');
+                    message.success(`Delete holiday "${record.name}" successfully!`);
                     fetchData();
                   })
-                  .catch((error) => {
-                    console.log(error);
+                  .catch(() => {
                     message.error('Something went wrong! Please refresh page and try again!');
                   });
               }}
@@ -92,7 +86,7 @@ const EmployeesListPage: NextPageWithLayout = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await employeeApi.getAll();
+      const response = await holidayApi.getAll();
       setData(response);
     } catch (error) {
       console.log(error);
@@ -105,18 +99,18 @@ const EmployeesListPage: NextPageWithLayout = () => {
     <>
       <Seo
         data={{
-          title: 'Employees | OT & Salary Management',
-          description: 'List employees page',
-          url: `${serverRuntimeConfig.HOST_URL}/employees`,
+          title: 'Holidays | OT & Salary Management',
+          description: 'List holidays page',
+          url: `${serverRuntimeConfig.HOST_URL}/${AppRoutes.holidays}`,
         }}
       />
 
       <Space style={{ width: '100%' }} direction="vertical" size="large">
         <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography.Title level={3}>List employees</Typography.Title>
-          <Link href="/employees/create" passHref>
+          <Typography.Title level={3}>List holidays</Typography.Title>
+          <Link href={`/${AppRoutes.holidays}/create`} passHref>
             <Button type="primary" ghost>
-              Create new employee
+              Create new holiday
             </Button>
           </Link>
         </section>
@@ -124,7 +118,7 @@ const EmployeesListPage: NextPageWithLayout = () => {
           <Table
             scroll={{ x: 800 }}
             columns={columns}
-            rowKey={(record) => record.employeeId as string}
+            rowKey={(record) => record.holidayId}
             dataSource={data}
             pagination={tableParams.pagination}
             loading={loading}
@@ -135,4 +129,4 @@ const EmployeesListPage: NextPageWithLayout = () => {
   );
 };
 
-export default EmployeesListPage;
+export default HolidaysListPage;

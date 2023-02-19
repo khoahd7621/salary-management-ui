@@ -1,5 +1,4 @@
 import { Provider } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
 import { SWRConfig } from 'swr/_internal';
 
 import axiosClient from '~/api-clients/axios-client';
@@ -8,7 +7,6 @@ import { AppPropsWithLayout } from '~/models/layouts';
 import { store } from '~/redux/store';
 
 import 'antd/dist/reset.css';
-import 'react-toastify/dist/ReactToastify.css';
 import '~/styles/globals.scss';
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
@@ -26,8 +24,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           <Component {...pageProps} />
         </Layout>
       </SWRConfig>
-
-      <ToastContainer />
     </Provider>
   );
 }

@@ -1,54 +1,17 @@
-import { Button, Space, Table, Typography } from 'antd';
+import { Button, message, Space, Table, Typography } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import type { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/es/table/interface';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { companyApi } from '~/api-clients/modules/company-api';
-import { Seo } from '~/components';
+import { ButtonWithModal, Seo } from '~/components';
 import { TableParams } from '~/models/components/Table';
 import { NextPageWithLayout } from '~/models/layouts';
 import { Company } from '~/models/modules/companies';
 
 type DataType = Company;
-
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Id',
-    dataIndex: 'companyId',
-    sorter: (a, b) => a.companyId.length - b.companyId.length,
-    width: '20%',
-    ellipsis: true,
-  },
-  {
-    title: 'Name',
-    dataIndex: 'companyName',
-    sorter: (a, b) => a.companyName.length - b.companyName.length,
-    width: '20%',
-    ellipsis: true,
-  },
-  {
-    title: 'Number of contract',
-    dataIndex: 'contracts',
-    render: (_text, record) => record.contracts?.length || 0,
-    sorter: (a, b) => (a.contracts?.length || 0) - (b.contracts?.length || 0),
-    width: '20%',
-  },
-  {
-    title: 'Action',
-    dataIndex: 'action',
-    render: (_text, _record) => (
-      <>
-        <Button type="primary">Edit</Button>
-        <Button style={{ marginLeft: '16px' }} type="primary" danger>
-          Delete
-        </Button>
-      </>
-    ),
-  },
-];
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -62,6 +25,65 @@ const CompaniesListPage: NextPageWithLayout = () => {
     },
   });
 
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'Id',
+      dataIndex: 'companyId',
+      sorter: (a, b) => a.companyId.length - b.companyId.length,
+      width: '20%',
+      ellipsis: true,
+    },
+    {
+      title: 'Name',
+      dataIndex: 'companyName',
+      sorter: (a, b) => a.companyName.length - b.companyName.length,
+      width: '20%',
+      ellipsis: true,
+    },
+    {
+      title: 'Number of contract',
+      dataIndex: 'contracts',
+      render: (_text, record) => record.contracts?.length || 0,
+      sorter: (a, b) => (a.contracts?.length || 0) - (b.contracts?.length || 0),
+      width: '20%',
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      width: '20%',
+      render: (_text, record) => {
+        return (
+          <Space>
+            <Link href={`/companies/${record.companyId}`}>
+              <Button type="primary">Edit</Button>
+            </Link>
+            <ButtonWithModal
+              modalTitle="Warning"
+              modalContent={`Are you sure to delete company "${record.companyName}"`}
+              onOk={() => {
+                companyApi
+                  .delete(record.companyId)
+                  .then(() => {
+                    message.success('Delete company successfully!');
+                    fetchData();
+                  })
+                  .catch(() => {
+                    message.error('Something went wrong! Please refresh page and try again!');
+                  });
+              }}
+            >
+              Delete
+            </ButtonWithModal>
+          </Space>
+        );
+      },
+    },
+  ];
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -69,14 +91,10 @@ const CompaniesListPage: NextPageWithLayout = () => {
       setData(response);
     } catch (error) {
       console.log(error);
-      toast.error('Something went wrong! Please refresh the page and try again!');
+      message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -116,6 +134,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
         </section>
         <section>
           <Table
+            scroll={{ x: 800 }}
             columns={columns}
             rowKey={(record) => record.companyId}
             dataSource={data}

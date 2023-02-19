@@ -22,10 +22,24 @@ ENV NODE_ENV production
 
 ARG API_HOST_URL=""
 ARG HOST_URL=""
+ARG NEXT_PUBLIC_FIREBASE_API_KEY
+ARG NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+ARG NEXT_PUBLIC_FIREBASE_PROJECT_ID
+ARG NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+ARG NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+ARG NEXT_PUBLIC_FIREBASE_APP_ID
+ARG NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 
 # Appends to .env.production
-RUN printf "$API_HOST_URL" >> .env.production
-RUN printf "$HOST_URL" >> .env.production
+RUN printf "$API_HOST_URL" >> .env.production >/dev/null
+RUN printf "$HOST_URL" >> .env.production >/dev/null
+RUN printf "$NEXT_PUBLIC_FIREBASE_API_KEY" >> .env.production >/dev/null
+RUN printf "$NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN" >> .env.production >/dev/null
+RUN printf "$NEXT_PUBLIC_FIREBASE_PROJECT_ID" >> .env.production >/dev/null
+RUN printf "$NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET" >> .env.production >/dev/null
+RUN printf "$NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID" >> .env.production >/dev/null
+RUN printf "$NEXT_PUBLIC_FIREBASE_APP_ID" >> .env.production >/dev/null
+RUN printf "$NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID" >> .env.production >/dev/null
 
 WORKDIR /app
 
