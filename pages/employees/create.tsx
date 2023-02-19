@@ -11,6 +11,7 @@ import { employeeApi } from '~/api-clients/modules/employee-api';
 import { Seo } from '~/components';
 import UploadImage from '~/components/UploadImage';
 import { firebaseConfig } from '~/firebaseconfig';
+import { Regex } from '~/models/constants/Regex';
 import { CreateForm } from '~/models/modules/employees';
 
 const { serverRuntimeConfig } = getConfig();
@@ -104,7 +105,7 @@ export default function CreateEmployeePage() {
               rules={[
                 { required: true, message: 'Please input identity number' },
                 {
-                  pattern: new RegExp(/\b\d{9}(?:\d{3})?\b/),
+                  pattern: new RegExp(Regex.VIETNAM_IDENTIFY_NUMBER),
                   message: 'Identity number is not valid',
                 },
               ]}
@@ -117,7 +118,7 @@ export default function CreateEmployeePage() {
               rules={[
                 { required: true, message: 'Please input employee phone number' },
                 {
-                  pattern: new RegExp(/(03|05|07|08|09|01[2|6|8|9])+(\d{8})\b/),
+                  pattern: new RegExp(Regex.VIETNAM_PHONE_NUMBER),
                   message: 'Phone number is not valid',
                 },
               ]}
