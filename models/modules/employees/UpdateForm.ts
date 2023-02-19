@@ -1,10 +1,10 @@
-import { Moment } from 'moment';
+import { Dayjs } from 'dayjs';
 
 export interface UpdateForm {
   employeeId: string;
   employeeName: string;
   image: string;
-  dateOfBirth: Moment;
+  dateOfBirth: Dayjs;
   address: string;
   identifyNumber: number;
   phoneNumber: string;

@@ -1,9 +1,9 @@
-import { Moment } from 'moment';
+import { Dayjs } from 'dayjs';
 
 export interface CreateForm {
   employeeName: string;
   image: any;
-  dateOfBirth: Moment;
+  dateOfBirth: Dayjs;
   address: string;
   identifyNumber: number;
   phoneNumber: string;

@@ -1,8 +1,8 @@
 import { uuidv4 } from '@firebase/util';
 import { Button, DatePicker, Form, Input, message, Space, Typography } from 'antd';
+import dayjs from 'dayjs';
 import { initializeApp } from 'firebase/app';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
-import moment from 'moment';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -35,7 +35,7 @@ export default function EditEmployeePage() {
       form.setFieldsValue({
         employeeId: employee.employeeId,
         employeeName: employee.name,
-        dateOfBirth: moment(employee.dateOfBirth),
+        dateOfBirth: dayjs(employee.dateOfBirth),
         image: employee.image,
         address: employee.address,
         identifyNumber: employee.identifyNumber,
