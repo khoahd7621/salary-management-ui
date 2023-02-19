@@ -4,10 +4,12 @@ on:
   push:
     branches: ['develop']
     paths:
+      - '.'
       - '.github/workflows/develop-ci.yml'
   pull_request:
     branches: ['develop']
     paths:
+      - '.'
       - '.github/workflows/develop-ci.yml'
 
 jobs:
