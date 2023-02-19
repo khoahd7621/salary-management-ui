@@ -10,6 +10,7 @@ import {
   ScheduleOutlined,
   SmileOutlined,
   TeamOutlined,
+  CalendarOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, Layout, Menu, MenuProps, message, Space, Typography } from 'antd';
 import Link from 'next/link';
@@ -73,6 +74,13 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
       '/employees',
       <Link href="/employees" passHref>
         <TeamOutlined />
+      </Link>
+    ),
+    getItem(
+      'Manage Holidays',
+      '/holidays',
+      <Link href="/holidays" passHref>
+        <CalendarOutlined />
       </Link>
     ),
     getItem(
