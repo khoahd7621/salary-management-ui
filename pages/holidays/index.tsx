@@ -27,8 +27,8 @@ const HolidaysListPage: NextPageWithLayout = () => {
   const columns: ColumnsType<Holiday> = [
     {
       title: 'Name',
-      dataIndex: 'name',
-      sorter: (a, b) => (a.name?.length || 0) - (b.name?.length || 0),
+      dataIndex: 'holidayName',
+      sorter: (a, b) => (a.holidayName?.length || 0) - (b.holidayName?.length || 0),
       width: '20%',
       ellipsis: true,
     },
@@ -58,12 +58,12 @@ const HolidaysListPage: NextPageWithLayout = () => {
             </Link>
             <ButtonWithModal
               modalTitle="Warning"
-              modalContent={`Are you sure to delete holiday "${record.name}"`}
+              modalContent={`Are you sure to delete holiday "${record.holidayName}"`}
               onOk={() => {
                 holidayApi
                   .delete(record.holidayId)
                   .then(() => {
-                    message.success(`Delete holiday "${record.name}" successfully!`);
+                    message.success(`Delete holiday "${record.holidayName}" successfully!`);
                     fetchData();
                   })
                   .catch(() => {
