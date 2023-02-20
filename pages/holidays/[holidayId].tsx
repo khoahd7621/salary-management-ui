@@ -29,7 +29,7 @@ export default function CreateHolidayPage() {
     try {
       const holiday = await holidayApi.getById(holidayId as string);
       form.setFieldsValue({
-        name: holiday.name || '',
+        name: holiday.holidayName || '',
         applyDate: [dayjs(holiday.startDate), dayjs(holiday.endDate)],
       });
     } catch (error) {
