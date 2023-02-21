@@ -6,9 +6,10 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { Seo, UploadFiles } from '~/components';
+import { SelectCompanyModal } from '~/components/modules/contracts';
 import { AppRoutes } from '~/models/constants/Routes';
-import { SalaryType } from '~/models/modules/contracts/SalaryType';
-import { Type } from '~/models/modules/contracts/Type';
+import { Company } from '~/models/modules/companies';
+import { CreateForm, SalaryType, Type } from '~/models/modules/contracts';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -16,10 +17,11 @@ export default function CreateContractPage() {
   const { RangePicker } = DatePicker;
   const [form] = useForm();
   const _router = useRouter();
-  const [file, setFile] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [file, setFile] = useState<any>(null);
+  const [company, setCompany] = useState<Company | null>(null);
 
-  const onFinish = async (_data: any) => {
+  const onFinish = async (_data: CreateForm) => {
     setLoading(true);
     try {
       // await contractApi.create();
@@ -29,6 +31,16 @@ export default function CreateContractPage() {
       message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
+  };
+
+  const handleSelectCompany = (company: Company | null) => {
+    if (company) {
+      setCompany(company);
+      form.setFieldsValue({ companyId: company.companyId });
+    } else {
+      setCompany(null);
+      form.setFieldsValue({ companyId: '' });
+    }
   };
 
   return (
@@ -125,12 +137,14 @@ export default function CreateContractPage() {
                 style={{ width: '100%' }}
               />
             </Form.Item>
-            <Form.Item
-              label="Company"
-              name="companyId"
-              rules={[{ required: true, message: 'Please select a company!' }]}
-            >
-              <Input />
+            <Form.Item noStyle>
+              <Form.Item
+                label="Company"
+                name="companyId"
+                rules={[{ required: true, message: 'Please select a company!' }]}
+              >
+                <SelectCompanyModal setCompany={handleSelectCompany} companyName={company?.companyName || ''} />
+              </Form.Item>
             </Form.Item>
             <Form.Item
               label="Company price"
