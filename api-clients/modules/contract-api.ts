@@ -10,4 +10,7 @@ export const contractApi = {
   create: (payload: CreatePayload) => {
     return axiosClient.post(`/${AppRoutes.contracts}`, payload);
   },
+  delete: (contractId: string) => {
+    return axiosClient.delete(`/${AppRoutes.contracts}/${contractId}`);
+  },
 };

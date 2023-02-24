@@ -34,9 +34,9 @@ export default function CreateContractPage() {
       const app = initializeApp(firebaseConfig);
 
       const storage = getStorage(app);
-      const fileRef = ref(storage, `files/${file.name + '-' + uuidv4()}`);
+      const fileRef = ref(storage, `files/${file.name + '-salt-' + uuidv4()}`);
 
-      const uploadResult = await uploadBytes(fileRef, file.originFileObj);
+      const uploadResult = await uploadBytes(fileRef, file);
       const fileUrl = await getDownloadURL(uploadResult.ref);
 
       const payload: CreatePayload = {

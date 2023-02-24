@@ -1,13 +1,18 @@
-import { Button, message, Space, Typography } from 'antd';
+import { Button, message, Space, Tag, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import Table from 'antd/lib/table';
+import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { contractApi } from '~/api-clients/modules/contract-api';
 
-import { Seo } from '~/components';
+import { ButtonWithModal, Seo } from '~/components';
+import { ContractDetail } from '~/components/modules/contracts/ContractDetail';
+import { TableParams } from '~/models/components/Table';
 import { AppRoutes } from '~/models/constants/Routes';
 import { NextPageWithLayout } from '~/models/layouts';
-import { Contract } from '~/models/modules/contracts';
+import { Contract, Status } from '~/models/modules/contracts';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -15,6 +20,147 @@ const ContractsListPage: NextPageWithLayout = () => {
   const { Title } = Typography;
   const [data, setData] = useState<Contract[]>();
   const [loading, setLoading] = useState(false);
+  const [tableParams, _setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+    },
+  });
+
+  const columns: ColumnsType<Contract> = [
+    {
+      title: 'Company',
+      dataIndex: 'partner',
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Contract detail"
+          modalContent={<ContractDetail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          {record.partner?.companyName}
+        </ButtonWithModal>
+      ),
+      sorter: (a, b) => (a.partner?.companyName?.length || 0) - (b.partner?.companyName?.length || 0),
+      width: '15%',
+      ellipsis: true,
+    },
+    {
+      title: 'Employee',
+      dataIndex: 'employee',
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Contract detail"
+          modalContent={<ContractDetail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          {record.employee?.name}
+        </ButtonWithModal>
+      ),
+      sorter: (a, b) => (a.employee?.name?.length || 0) - (b.employee?.name?.length || 0),
+      width: '15%',
+      ellipsis: true,
+    },
+    {
+      title: 'Start date',
+      dataIndex: 'startDate',
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Contract detail"
+          modalContent={<ContractDetail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          {dayjs(record.startDate).format('DD/MM/YYYY')}
+        </ButtonWithModal>
+      ),
+      sorter: (a, b) => dayjs(a.startDate).diff(b.startDate),
+      width: '12%',
+    },
+    {
+      title: 'End date',
+      dataIndex: 'endDate',
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Contract detail"
+          modalContent={<ContractDetail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          {dayjs(record.endDate).format('DD/MM/YYYY')}
+        </ButtonWithModal>
+      ),
+      sorter: (a, b) => dayjs(a.endDate).diff(b.endDate),
+      width: '12%',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'contractStatus',
+      render: (_text, record) => {
+        let color = 'green';
+        if (record.contractStatus === Status.Expired) {
+          color = 'volcano';
+        } else if (record.contractStatus === Status.Inactive) {
+          color = 'red';
+        } else if (record.contractStatus === Status.Terminated) {
+          color = 'geekblue';
+        }
+        return (
+          <ButtonWithModal
+            modalTitle="Contract detail"
+            modalContent={<ContractDetail data={record} />}
+            type="info"
+            okText="Close"
+            okType="primary"
+            isLink
+          >
+            <Tag color={color}>{record.contractStatus}</Tag>
+          </ButtonWithModal>
+        );
+      },
+      width: '10%',
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      render: (_text, record) => {
+        return (
+          <Space>
+            <Link href={`/${AppRoutes.contracts}/${record.contractId}`}>
+              <Button type="primary">Edit</Button>
+            </Link>
+            <ButtonWithModal
+              modalTitle="Warning"
+              modalContent={`Are you sure to delete contract between "${record.partner.companyName}" and "${record.employee.name}"`}
+              onOk={() => {
+                contractApi
+                  .delete(record.contractId)
+                  .then(() => {
+                    message.success('Delete contract successfully!');
+                    fetchData();
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    message.error('Something went wrong! Please refresh page and try again!');
+                  });
+              }}
+            >
+              Delete
+            </ButtonWithModal>
+          </Space>
+        );
+      },
+    },
+  ];
 
   useEffect(() => {
     fetchData();
@@ -31,8 +177,6 @@ const ContractsListPage: NextPageWithLayout = () => {
     }
     setLoading(false);
   };
-
-  console.log(data);
 
   return (
     <>
@@ -53,7 +197,16 @@ const ContractsListPage: NextPageWithLayout = () => {
             </Button>
           </Link>
         </section>
-        <section></section>
+        <section>
+          <Table
+            scroll={{ x: 800 }}
+            columns={columns}
+            rowKey={(record) => record.contractId}
+            dataSource={data}
+            pagination={tableParams.pagination}
+            loading={loading}
+          />
+        </section>
       </Space>
     </>
   );

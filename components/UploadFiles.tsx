@@ -9,12 +9,9 @@ export function UploadFiles({ file, setFile }: { file: any; setFile: (_file: any
   const [loading, setLoading] = useState(false);
 
   const beforeUpload = (file: RcFile) => {
-    const isPdfOrDocoOrDocx =
-      file.type === 'application/pdf' ||
-      file.type === 'application/msword' ||
-      file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const isPdfOrDocoOrDocx = file.type === 'application/pdf';
     if (!isPdfOrDocoOrDocx) {
-      message.error('You can only upload Doc/Docx/PDF file!');
+      message.error('You can only upload PDF file!');
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
@@ -49,7 +46,7 @@ export function UploadFiles({ file, setFile }: { file: any; setFile: (_file: any
       defaultFileList={file ? [file] : []}
     >
       <Button disabled={loading} icon={<UploadOutlined />}>
-        Upload
+        Upload PDF file
       </Button>
     </Upload>
   );

@@ -13,6 +13,9 @@ interface Props {
   modalHeaderIcon?: React.ReactNode;
   onOk?: () => void;
   onCancel?: () => void;
+  isLink?: boolean;
+  width?: number;
+  okType?: 'primary' | 'danger' | 'ghost' | 'dashed' | 'link' | 'text' | 'default';
 }
 
 export const ButtonWithModal = ({
@@ -27,14 +30,18 @@ export const ButtonWithModal = ({
   modalHeaderIcon = <ExclamationCircleFilled />,
   onOk = () => {},
   onCancel = () => {},
+  isLink = false,
+  width = 500,
+  okType = 'danger',
 }: Props) => {
   const showModal = () => {
     Modal[type]({
+      width: width,
       icon: modalHeaderIcon,
       title: modalTitle,
       content: modalContent,
       okText,
-      okType: 'danger',
+      okType: okType,
       cancelText,
       cancelButtonProps: {
         disabled: disabledCancel,
@@ -45,8 +52,16 @@ export const ButtonWithModal = ({
     });
   };
   return (
-    <Button onClick={showModal} type="primary" danger>
-      {children}
-    </Button>
+    <>
+      {isLink ? (
+        <div style={{ cursor: 'pointer' }} onClick={showModal}>
+          {children}
+        </div>
+      ) : (
+        <Button onClick={showModal} type="primary" danger>
+          {children}
+        </Button>
+      )}
+    </>
   );
 };
