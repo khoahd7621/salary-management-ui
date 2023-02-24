@@ -12,6 +12,7 @@ import { contractApi } from '~/api-clients/modules/contract-api';
 import { Seo, UploadFiles } from '~/components';
 import { SelectCompanyModal, SelectEmployeeModal } from '~/components/modules/contracts';
 import { firebaseConfig } from '~/firebaseconfig';
+import { Regex } from '~/models/constants/Regex';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Company } from '~/models/modules/companies';
 import { CreateForm, CreatePayload, SalaryType, Type } from '~/models/modules/contracts';
@@ -137,7 +138,7 @@ export default function CreateContractPage() {
               rules={[{ required: true, message: 'Please input basic salary!' }]}
             >
               <InputNumber
-                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
                 addonAfter="VNĐ"
                 min={0}
                 max={1000000000}
@@ -170,7 +171,7 @@ export default function CreateContractPage() {
             </Form.Item>
             <Form.Item label="BHXH" name="bhxh" rules={[{ required: true, message: 'Please input price of BHXH!' }]}>
               <InputNumber
-                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
                 addonAfter="VNĐ"
                 min={0}
                 max={1000000000}
@@ -179,7 +180,7 @@ export default function CreateContractPage() {
             </Form.Item>
             <Form.Item label="BHYT" name="bhyt" rules={[{ required: true, message: 'Please input price of BHYT!' }]}>
               <InputNumber
-                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
                 addonAfter="VNĐ"
                 min={0}
                 max={1000000000}
@@ -188,7 +189,7 @@ export default function CreateContractPage() {
             </Form.Item>
             <Form.Item label="BHTN" name="bhtn" rules={[{ required: true, message: 'Please input price of BHTN!' }]}>
               <InputNumber
-                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
                 addonAfter="VNĐ"
                 min={0}
                 max={1000000000}
@@ -210,7 +211,7 @@ export default function CreateContractPage() {
               rules={[{ required: true, message: 'Please enter company price!' }]}
             >
               <InputNumber
-                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
                 addonAfter="VNĐ"
                 min={0}
                 max={1000000000}
