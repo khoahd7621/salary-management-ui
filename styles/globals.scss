@@ -14,3 +14,15 @@
   background: grey;
   border-radius: 10px;
 }
+
+// Table selection
+.table-selection {
+  table {
+    tbody {
+      tr {
+        cursor: pointer;
+        user-select: none;
+      }
+    }
+  }
+}

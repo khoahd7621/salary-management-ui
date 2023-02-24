@@ -1,18 +1,17 @@
-import { Button, DatePicker, Form, Input, message, Space, Typography } from 'antd';
+import { Form, message, Space, Typography } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import getConfig from 'next/config';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { holidayApi } from '~/api-clients/modules/holiday-api';
 import { Seo } from '~/components';
+import { HolidayForm } from '~/components/modules/holidays';
 import { AppRoutes } from '~/models/constants/Routes';
 
 const { serverRuntimeConfig } = getConfig();
 
 export default function CreateHolidayPage() {
-  const { RangePicker } = DatePicker;
   const router = useRouter();
   const { holidayId } = router.query;
   const [form] = Form.useForm();
@@ -23,14 +22,16 @@ export default function CreateHolidayPage() {
     if (holidayId) {
       fetchHoliday();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [holidayId]);
 
   const fetchHoliday = async () => {
     try {
       const holiday = await holidayApi.getById(holidayId as string);
       form.setFieldsValue({
-        name: holiday.name || '',
+        name: holiday.holidayName || '',
         applyDate: [dayjs(holiday.startDate), dayjs(holiday.endDate)],
+        isPaid: holiday.isPaid,
       });
     } catch (error) {
       console.log(error);
@@ -40,13 +41,15 @@ export default function CreateHolidayPage() {
     setLoading(false);
   };
 
-  const onFinish = async (data: { name: string; applyDate: Dayjs[] }) => {
+  const onFinish = async (data: { name: string; applyDate: Dayjs[]; isPaid: boolean }) => {
     setSending(true);
     try {
-      await holidayApi.create({
+      await holidayApi.update({
+        id: holidayId as string,
         name: data.name,
         startDate: data.applyDate[0].toISOString(),
         endDate: data.applyDate[1].toISOString(),
+        isPaid: data.isPaid,
       });
       await router.push(`/${AppRoutes.holidays}`);
       await message.success('Holiday updated successfully!', 3);
@@ -72,39 +75,7 @@ export default function CreateHolidayPage() {
         {loading ? (
           <div>Loading...</div>
         ) : (
-          <Form
-            form={form}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            autoComplete="off"
-          >
-            <Space style={{ width: '100%' }} direction="vertical">
-              <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please input holiday name!' }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Apply date"
-                name="applyDate"
-                rules={[{ required: true, message: 'Please input apply date!' }]}
-              >
-                <RangePicker format={'DD/MM/YYYY'} />
-              </Form.Item>
-
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button disabled={sending} type="primary" htmlType="submit">
-                  Update
-                </Button>
-                <Link style={{ marginLeft: '16px' }} href={`/${AppRoutes.holidays}`} passHref>
-                  <Button type="primary" danger>
-                    Cancel
-                  </Button>
-                </Link>
-              </Form.Item>
-            </Space>
-          </Form>
+          <HolidayForm form={form} onFinish={onFinish} button="Update" isSending={sending} />
         )}
       </Space>
     </>

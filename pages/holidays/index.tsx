@@ -1,5 +1,7 @@
 import { Button, message, Space, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
 import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
@@ -17,7 +19,7 @@ const { serverRuntimeConfig } = getConfig();
 const HolidaysListPage: NextPageWithLayout = () => {
   const [data, setData] = useState<Holiday[]>();
   const [loading, setLoading] = useState(false);
-  const [tableParams, _setTableParams] = useState<TableParams>({
+  const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
       pageSize: 10,
@@ -27,8 +29,8 @@ const HolidaysListPage: NextPageWithLayout = () => {
   const columns: ColumnsType<Holiday> = [
     {
       title: 'Name',
-      dataIndex: 'name',
-      sorter: (a, b) => (a.name?.length || 0) - (b.name?.length || 0),
+      dataIndex: 'holidayName',
+      sorter: (a, b) => (a.holidayName?.length || 0) - (b.holidayName?.length || 0),
       width: '20%',
       ellipsis: true,
     },
@@ -47,6 +49,12 @@ const HolidaysListPage: NextPageWithLayout = () => {
       width: '20%',
     },
     {
+      title: 'Is paid',
+      dataIndex: 'endDate',
+      render: (_text, record) => (record.isPaid ? 'Yes' : 'No'),
+      width: '20%',
+    },
+    {
       title: 'Action',
       dataIndex: 'action',
       width: '20%',
@@ -58,12 +66,12 @@ const HolidaysListPage: NextPageWithLayout = () => {
             </Link>
             <ButtonWithModal
               modalTitle="Warning"
-              modalContent={`Are you sure to delete holiday "${record.name}"`}
+              modalContent={`Are you sure to delete holiday "${record.holidayName}"`}
               onOk={() => {
                 holidayApi
                   .delete(record.holidayId)
                   .then(() => {
-                    message.success(`Delete holiday "${record.name}" successfully!`);
+                    message.success(`Delete holiday "${record.holidayName}" successfully!`);
                     fetchData();
                   })
                   .catch(() => {
@@ -95,6 +103,23 @@ const HolidaysListPage: NextPageWithLayout = () => {
     setLoading(false);
   };
 
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<Holiday> | SorterResult<Holiday>[],
+    _extra: TableCurrentDataSource<Holiday>
+  ) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter,
+    });
+
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
+  };
+
   return (
     <>
       <Seo
@@ -122,6 +147,7 @@ const HolidaysListPage: NextPageWithLayout = () => {
             dataSource={data}
             pagination={tableParams.pagination}
             loading={loading}
+            onChange={handleTableChange}
           />
         </section>
       </Space>

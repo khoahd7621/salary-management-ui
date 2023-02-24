@@ -1,28 +1,29 @@
-import { Button, DatePicker, Form, Input, message, Space, Typography } from 'antd';
+import { Form, message, Space, Typography } from 'antd';
 import { Dayjs } from 'dayjs';
 import getConfig from 'next/config';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { holidayApi } from '~/api-clients/modules/holiday-api';
 import { Seo } from '~/components';
+import { HolidayForm } from '~/components/modules/holidays';
 import { AppRoutes } from '~/models/constants/Routes';
 
 const { serverRuntimeConfig } = getConfig();
 
 export default function CreateHolidayPage() {
-  const { RangePicker } = DatePicker;
+  const [form] = Form.useForm();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onFinish = async (data: { name: string; applyDate: Dayjs[] }) => {
+  const onFinish = async (data: { name: string; applyDate: Dayjs[]; isPaid: boolean }) => {
     setLoading(true);
     try {
       await holidayApi.create({
         name: data.name,
         startDate: data.applyDate[0].toISOString(),
         endDate: data.applyDate[1].toISOString(),
+        isPaid: data.isPaid,
       });
       await router.push(`/${AppRoutes.holidays}`);
       await message.success('Holiday created successfully!', 3);
@@ -46,38 +47,9 @@ export default function CreateHolidayPage() {
           <Typography.Title level={3}>Create new holiday</Typography.Title>
         </section>
 
-        <Form
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          autoComplete="off"
-        >
-          <Space style={{ width: '100%' }} direction="vertical">
-            <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please input holiday name!' }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Apply date"
-              name="applyDate"
-              rules={[{ required: true, message: 'Please input apply date!' }]}
-            >
-              <RangePicker format={'DD/MM/YYYY'} />
-            </Form.Item>
-
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button disabled={loading} type="primary" htmlType="submit">
-                Create
-              </Button>
-              <Link style={{ marginLeft: '16px' }} href={`/${AppRoutes.holidays}`} passHref>
-                <Button type="primary" danger>
-                  Cancel
-                </Button>
-              </Link>
-            </Form.Item>
-          </Space>
-        </Form>
+        <section>
+          <HolidayForm form={form} onFinish={onFinish} button="Create" isSending={loading} />
+        </section>
       </Space>
     </>
   );

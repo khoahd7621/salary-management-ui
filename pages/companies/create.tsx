@@ -11,16 +11,17 @@ const { serverRuntimeConfig } = getConfig();
 
 export interface CompanyForm {
   companyName: string;
+  address: string;
 }
 
 export default function CreateCompanyPage() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onFinish = async ({ companyName }: CompanyForm) => {
+  const onFinish = async ({ companyName, address }: CompanyForm) => {
     setLoading(true);
     try {
-      await companyApi.create(companyName);
+      await companyApi.create(companyName, address);
       message.success('Company created successfully!');
       router.push('/companies');
     } catch (error) {
@@ -56,6 +57,13 @@ export default function CreateCompanyPage() {
               label="Company name"
               name="companyName"
               rules={[{ required: true, message: 'Please input company name!' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Address"
+              name="address"
+              rules={[{ required: true, message: 'Please input company address!' }]}
             >
               <Input />
             </Form.Item>

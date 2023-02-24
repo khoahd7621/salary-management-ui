@@ -1,18 +1,16 @@
 import { uuidv4 } from '@firebase/util';
-import { Button, DatePicker, Form, Input, message, Space, Typography } from 'antd';
+import { Form, message, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { initializeApp } from 'firebase/app';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import getConfig from 'next/config';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { employeeApi } from '~/api-clients/modules/employee-api';
 import { Seo } from '~/components';
-import UploadImage from '~/components/UploadImage';
+import { EmployeeForm } from '~/components/modules/employees';
 import { firebaseConfig } from '~/firebaseconfig';
-import { Regex } from '~/models/constants/Regex';
 import { UpdateForm } from '~/models/modules/employees/UpdateForm';
 
 const { serverRuntimeConfig } = getConfig();
@@ -27,8 +25,9 @@ export default function EditEmployeePage() {
   const [image, setImage] = useState<any>(null);
 
   useEffect(() => {
-    fetchEmployee();
-  }, []);
+    if (employeeId) fetchEmployee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [employeeId]);
 
   const fetchEmployee = async () => {
     try {
@@ -43,7 +42,7 @@ export default function EditEmployeePage() {
         phoneNumber: employee.phoneNumber,
       });
       setImage({ preview: employee.image });
-      setOldImageUrl(employee.image as string);
+      setOldImageUrl(employee.image);
     } catch (error) {
       console.log(error);
       await router.push('/employees');
@@ -77,11 +76,6 @@ export default function EditEmployeePage() {
     setSending(false);
   };
 
-  const handleSetImageUrl = (image: any) => {
-    setImage(image);
-    form.setFieldsValue({ image: image?.preview });
-  };
-
   return (
     <>
       <Seo
@@ -99,83 +93,14 @@ export default function EditEmployeePage() {
         {loading ? (
           <div>Loading ...</div>
         ) : (
-          <Form
+          <EmployeeForm
+            button="Update"
             form={form}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
             onFinish={onFinish}
-            autoComplete="off"
-          >
-            <Form.Item label="Employee Id" name="employeeId" hidden />
-            <Space style={{ width: '100%' }} direction="vertical">
-              <Form.Item
-                label="Name"
-                name="employeeName"
-                rules={[{ required: true, message: 'Please input employee name!' }]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Date of birth"
-                name="dateOfBirth"
-                rules={[{ required: true, message: 'Please input date of birth' }]}
-              >
-                <DatePicker format={['DD/MM/YYYY']} />
-              </Form.Item>
-              <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please add an image' }]}>
-                <UploadImage image={image} setImage={handleSetImageUrl} />
-              </Form.Item>
-              <Form.Item
-                label="Address"
-                name="address"
-                rules={[
-                  { required: true, message: 'Please input an address' },
-                  { max: 255, message: 'Address is maximum 255 characters' },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Identify number"
-                name="identifyNumber"
-                rules={[
-                  { required: true, message: 'Please input identity number' },
-                  {
-                    pattern: new RegExp(Regex.VIETNAM_IDENTIFY_NUMBER),
-                    message: 'Identity number is not valid',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Phone"
-                name="phoneNumber"
-                rules={[
-                  { required: true, message: 'Please input employee phone number' },
-                  {
-                    pattern: new RegExp(Regex.VIETNAM_PHONE_NUMBER),
-                    message: 'Phone number is not valid',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button disabled={sending} type="primary" htmlType="submit">
-                  Edit
-                </Button>
-                <Link style={{ marginLeft: '16px' }} href="/employees" passHref>
-                  <Button type="primary" danger>
-                    Cancel
-                  </Button>
-                </Link>
-              </Form.Item>
-            </Space>
-          </Form>
+            isSending={sending}
+            image={image}
+            setImage={setImage}
+          />
         )}
       </Space>
     </>

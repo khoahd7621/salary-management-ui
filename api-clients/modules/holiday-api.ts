@@ -6,28 +6,27 @@ const routes = AppRoutes.holidays;
 
 export const holidayApi = {
   getAll: (): Promise<Holiday[]> => {
-    return axiosClient.get(`/${routes}/get-all`);
+    return axiosClient.get(`/${routes}`);
   },
   getById: (holidayId: string): Promise<Holiday> => {
-    return axiosClient.get(`/${routes}/${holidayId}`);
+    return axiosClient.get(`/${routes}/${holidayId}?id=${holidayId}`);
   },
   create: (holiday: CreatePayload) => {
     return axiosClient.post(`/${routes}`, {
-      name: holiday.name,
+      holidayName: holiday.name,
       startDate: holiday.startDate,
       endDate: holiday.endDate,
     });
   },
   update: (holiday: UpdatePayload) => {
-    return axiosClient.put(`/${routes}/update`, {
-      id: holiday.id,
-      name: holiday.name,
+    return axiosClient.put(`/${routes}/${holiday.id}`, {
+      holidayName: holiday.name,
       startDate: holiday.startDate,
       endDate: holiday.endDate,
     });
   },
   delete: (holidayId: string) => {
-    return axiosClient.delete(`/${routes}/delete`, {
+    return axiosClient.delete(`/${routes}/${holidayId}`, {
       data: { id: holidayId },
     });
   },

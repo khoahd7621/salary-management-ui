@@ -27,16 +27,17 @@ const CompaniesListPage: NextPageWithLayout = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Id',
-      dataIndex: 'companyId',
-      sorter: (a, b) => a.companyId.length - b.companyId.length,
+      title: 'Name',
+      dataIndex: 'companyName',
+      sorter: (a, b) => a.companyName.length - b.companyName.length,
       width: '20%',
       ellipsis: true,
     },
     {
-      title: 'Name',
-      dataIndex: 'companyName',
-      sorter: (a, b) => a.companyName.length - b.companyName.length,
+      title: 'Address',
+      dataIndex: 'address',
+      render: (_text, record) => record.address || 'N/A',
+      sorter: (a, b) => a.address.length - b.address.length,
       width: '20%',
       ellipsis: true,
     },
