@@ -17,6 +17,7 @@ import { AppRoutes } from '~/models/constants/Routes';
 import { Company } from '~/models/modules/companies';
 import { SalaryType, Type, UpdateForm, UpdatePayload } from '~/models/modules/contracts';
 import { Employee } from '~/models/modules/employees';
+import { formatFileName } from '~/utils/format';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -59,7 +60,7 @@ export default function EditContractPage() {
       });
       setCompany(contract.partner);
       setEmployee(contract.employee);
-      setFile({ name: contract.file });
+      setFile({ name: formatFileName.splitFileName(contract.file) });
       setOldFileUrl(contract.file);
     } catch (error) {
       console.log(error);

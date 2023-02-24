@@ -2,7 +2,7 @@ import { Col, Row, Space } from 'antd';
 import Link from 'antd/lib/typography/Link';
 import dayjs from 'dayjs';
 import { Contract } from '~/models/modules/contracts';
-import { formatMoney } from '~/utils/format';
+import { formatFileName, formatMoney } from '~/utils/format';
 
 export interface ContractDetailProps {
   data: Contract;
@@ -16,7 +16,7 @@ export function ContractDetail({ data }: ContractDetailProps) {
         <Col span={18}>
           {
             <Link href={data.file} target="_blank" rel="noopener noreferrer">
-              {data.file}
+              {formatFileName.splitFileName(data.file)}
             </Link>
           }
         </Col>
