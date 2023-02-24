@@ -17,6 +17,7 @@ export default function EditCompany() {
   const [company, setCompany] = useState<Company>({
     companyId: '',
     companyName: '',
+    address: '',
     contracts: [],
   });
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,15 +40,15 @@ export default function EditCompany() {
     setLoading(false);
   };
 
-  const onFinish = async ({ companyName }: CompanyForm) => {
+  const onFinish = async ({ companyName, address }: CompanyForm) => {
     setSending(true);
     try {
-      await companyApi.update(companyId as string, companyName);
-      message.success({
+      await companyApi.update(companyId as string, companyName, address);
+      await router.push('/companies');
+      await message.success({
         content: 'Edit company successfully!',
         duration: 5,
       });
-      router.push('/companies');
     } catch (error) {
       message.error({
         content: 'Something went wrong! Please refresh the page and try again!',
@@ -89,6 +90,14 @@ export default function EditCompany() {
                   name="companyName"
                   initialValue={company.companyName}
                   rules={[{ required: true, message: 'Please input company name!' }]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="Address"
+                  name="address"
+                  initialValue={company.address}
+                  rules={[{ required: true, message: 'Please input company address!' }]}
                 >
                   <Input />
                 </Form.Item>
