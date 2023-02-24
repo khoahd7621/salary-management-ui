@@ -1,5 +1,7 @@
 import { Button, message, Space, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import { TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
 import getConfig from 'next/config';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,7 +19,7 @@ const { serverRuntimeConfig } = getConfig();
 const EmployeesListPage: NextPageWithLayout = () => {
   const [data, setData] = useState<Employee[]>();
   const [loading, setLoading] = useState(false);
-  const [tableParams, _setTableParams] = useState<TableParams>({
+  const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
       pageSize: 10,
@@ -148,6 +150,23 @@ const EmployeesListPage: NextPageWithLayout = () => {
     setLoading(false);
   };
 
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<Employee> | SorterResult<Employee>[],
+    _extra: TableCurrentDataSource<Employee>
+  ) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter,
+    });
+
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
+  };
+
   return (
     <>
       <Seo
@@ -175,6 +194,7 @@ const EmployeesListPage: NextPageWithLayout = () => {
             dataSource={data}
             pagination={tableParams.pagination}
             loading={loading}
+            onChange={handleTableChange}
           />
         </section>
       </Space>
