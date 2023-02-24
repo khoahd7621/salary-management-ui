@@ -44,7 +44,7 @@ export default function EditEmployeePage() {
         phoneNumber: employee.phoneNumber,
       });
       setImage({ preview: employee.image });
-      setOldImageUrl(employee.image as string);
+      setOldImageUrl(employee.image);
     } catch (error) {
       console.log(error);
       await router.push('/employees');

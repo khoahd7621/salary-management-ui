@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { employeeApi } from '~/api-clients/modules/employee-api';
 import { ButtonWithModal, Seo } from '~/components';
+import { Detail } from '~/components/modules/employees';
 import { TableParams } from '~/models/components/Table';
 import { NextPageWithLayout } from '~/models/layouts';
 import { Employee } from '~/models/modules/employees';
@@ -25,30 +26,76 @@ const EmployeesListPage: NextPageWithLayout = () => {
 
   const columns: ColumnsType<Employee> = [
     {
-      title: 'Id',
-      dataIndex: 'employeeId',
-      sorter: (a, b) => (a.employeeId?.length || 0) - (b.employeeId?.length || 0),
+      title: 'Code',
+      dataIndex: 'code',
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Employee detail"
+          modalContent={<Detail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          {record.code}
+        </ButtonWithModal>
+      ),
+      sorter: (a, b) => (a.code?.length || 0) - (b.code?.length || 0),
+      width: '10%',
+      ellipsis: true,
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Employee detail"
+          modalContent={<Detail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          {record.name}
+        </ButtonWithModal>
+      ),
+      sorter: (a, b) => (a.name?.length || 0) - (b.name?.length || 0),
       width: '20%',
       ellipsis: true,
     },
     {
       title: 'Image',
       dataIndex: 'image',
-      render: (_text, record) => <Image width={50} height={50} src={record.image || ''} alt={`${record.name}`} />,
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Employee detail"
+          modalContent={<Detail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          <Image width={50} height={50} src={record.image || ''} alt={`${record.name}`} />
+        </ButtonWithModal>
+      ),
       sorter: false,
       width: '10%',
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      sorter: (a, b) => (a.name?.length || 0) - (b.name?.length || 0),
-      width: '20%',
-      ellipsis: true,
-    },
-    {
       title: 'Number of contract',
       dataIndex: 'contracts',
-      render: (_text, record) => record.contracts?.length || 0,
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Employee detail"
+          modalContent={<Detail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          {record.contracts?.length || 0}
+        </ButtonWithModal>
+      ),
       sorter: (a, b) => (a.contracts?.length || 0) - (b.contracts?.length || 0),
       width: '20%',
     },
@@ -66,7 +113,7 @@ const EmployeesListPage: NextPageWithLayout = () => {
               modalContent={`Are you sure to delete employee "${record.name}"`}
               onOk={() => {
                 employeeApi
-                  .delete(record.employeeId as string)
+                  .delete(record.employeeId)
                   .then(() => {
                     message.success('Delete employee successfully!');
                     fetchData();
@@ -124,7 +171,7 @@ const EmployeesListPage: NextPageWithLayout = () => {
           <Table
             scroll={{ x: 800 }}
             columns={columns}
-            rowKey={(record) => record.employeeId as string}
+            rowKey={(record) => record.employeeId}
             dataSource={data}
             pagination={tableParams.pagination}
             loading={loading}
