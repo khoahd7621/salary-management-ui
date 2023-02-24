@@ -1,17 +1,15 @@
 import { uuidv4 } from '@firebase/util';
-import { Button, DatePicker, Form, Input, message, Space, Typography } from 'antd';
+import { Form, message, Space, Typography } from 'antd';
 import { initializeApp } from 'firebase/app';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import getConfig from 'next/config';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { employeeApi } from '~/api-clients/modules/employee-api';
 import { Seo } from '~/components';
-import UploadImage from '~/components/UploadImage';
+import { EmployeeForm } from '~/components/modules/employees';
 import { firebaseConfig } from '~/firebaseconfig';
-import { Regex } from '~/models/constants/Regex';
 import { CreateForm } from '~/models/modules/employees';
 
 const { serverRuntimeConfig } = getConfig();
@@ -43,11 +41,6 @@ export default function CreateEmployeePage() {
     setLoading(false);
   };
 
-  const handleSetImageUrl = (image: any) => {
-    setImage(image);
-    form.setFieldsValue({ image: image?.preview });
-  };
-
   return (
     <>
       <Seo
@@ -62,82 +55,16 @@ export default function CreateEmployeePage() {
           <Typography.Title level={3}>Create new employee</Typography.Title>
         </section>
 
-        <Form
-          form={form}
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          autoComplete="off"
-        >
-          <Space style={{ width: '100%' }} direction="vertical">
-            <Form.Item
-              label="Name"
-              name="employeeName"
-              rules={[{ required: true, message: 'Please input employee name!' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Date of birth"
-              name="dateOfBirth"
-              rules={[{ required: true, message: 'Please input date of birth' }]}
-            >
-              <DatePicker format={['DD/MM/YYYY']} />
-            </Form.Item>
-            <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please add an image' }]}>
-              <UploadImage image={image} setImage={handleSetImageUrl} />
-            </Form.Item>
-            <Form.Item
-              label="Address"
-              name="address"
-              rules={[
-                { required: true, message: 'Please input an address' },
-                { max: 255, message: 'Address is maximum 255 characters' },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Identify number"
-              name="identifyNumber"
-              rules={[
-                { required: true, message: 'Please input identity number' },
-                {
-                  pattern: new RegExp(Regex.VIETNAM_IDENTIFY_NUMBER),
-                  message: 'Identity number is not valid',
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Phone"
-              name="phoneNumber"
-              rules={[
-                { required: true, message: 'Please input employee phone number' },
-                {
-                  pattern: new RegExp(Regex.VIETNAM_PHONE_NUMBER),
-                  message: 'Phone number is not valid',
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button disabled={loading} type="primary" htmlType="submit">
-                Create
-              </Button>
-              <Link style={{ marginLeft: '16px' }} href="/employees" passHref>
-                <Button type="primary" danger>
-                  Cancel
-                </Button>
-              </Link>
-            </Form.Item>
-          </Space>
-        </Form>
+        <section>
+          <EmployeeForm
+            button="Create"
+            form={form}
+            onFinish={onFinish}
+            isSending={loading}
+            image={image}
+            setImage={setImage}
+          />
+        </section>
       </Space>
     </>
   );
