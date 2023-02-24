@@ -3,11 +3,11 @@ import { FormInstance } from 'antd/lib/form/Form';
 import Link from 'next/link';
 
 import { UploadFiles } from '~/components/UploadFiles';
-import { Regex } from '~/models/constants/Regex';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Company } from '~/models/modules/companies';
 import { SalaryType, Type } from '~/models/modules/contracts';
 import { Employee } from '~/models/modules/employees';
+import { addCommasToNumber } from '~/utils/format';
 import { SelectCompanyModal } from './SelectCompanyModal';
 import { SelectEmployeeModal } from './SelectEmployeeModal';
 
@@ -99,7 +99,7 @@ export function ContractForm({
           rules={[{ required: true, message: 'Please input basic salary!' }]}
         >
           <InputNumber
-            formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
+            formatter={(value) => addCommasToNumber(value)}
             addonAfter="VNĐ"
             min={0}
             max={1000000000}
@@ -132,7 +132,7 @@ export function ContractForm({
         </Form.Item>
         <Form.Item label="BHXH" name="bhxh" rules={[{ required: true, message: 'Please input price of BHXH!' }]}>
           <InputNumber
-            formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
+            formatter={(value) => addCommasToNumber(value)}
             addonAfter="VNĐ"
             min={0}
             max={1000000000}
@@ -141,7 +141,7 @@ export function ContractForm({
         </Form.Item>
         <Form.Item label="BHYT" name="bhyt" rules={[{ required: true, message: 'Please input price of BHYT!' }]}>
           <InputNumber
-            formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
+            formatter={(value) => addCommasToNumber(value)}
             addonAfter="VNĐ"
             min={0}
             max={1000000000}
@@ -150,7 +150,7 @@ export function ContractForm({
         </Form.Item>
         <Form.Item label="BHTN" name="bhtn" rules={[{ required: true, message: 'Please input price of BHTN!' }]}>
           <InputNumber
-            formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
+            formatter={(value) => addCommasToNumber(value)}
             addonAfter="VNĐ"
             min={0}
             max={1000000000}
@@ -168,7 +168,7 @@ export function ContractForm({
           rules={[{ required: true, message: 'Please enter company price!' }]}
         >
           <InputNumber
-            formatter={(value) => `${value}`.replace(Regex.COMMAS_SEPARATED_NUMBER, ',')}
+            formatter={(value) => addCommasToNumber(value)}
             addonAfter="VNĐ"
             min={0}
             max={1000000000}

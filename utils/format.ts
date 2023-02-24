@@ -12,3 +12,17 @@ export const formatFileName = {
     return fileName.slice(firstIndex, lastIndex);
   },
 };
+
+export const addCommasToNumber = (number: number | undefined) => {
+  let formatted = '';
+  if (number !== undefined) {
+    const str = number.toString();
+    for (let i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 === 0) {
+        formatted += ',';
+      }
+      formatted += str[i];
+    }
+  }
+  return formatted;
+};
