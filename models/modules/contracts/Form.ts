@@ -7,8 +7,14 @@ export interface CreateForm {
   basicSalary: number;
   salaryType: string;
   bhxh: number;
+  bhyt: number;
+  bhtn: number;
   companyId: string;
   companyPrice: number;
   employeeId: string;
   type: string;
+}
+
+export interface UpdateForm extends CreateForm {
+  id: string;
 }

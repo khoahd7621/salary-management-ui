@@ -27,8 +27,9 @@ export default function EditEmployeePage() {
   const [image, setImage] = useState<any>(null);
 
   useEffect(() => {
-    fetchEmployee();
-  }, []);
+    if (employeeId) fetchEmployee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [employeeId]);
 
   const fetchEmployee = async () => {
     try {

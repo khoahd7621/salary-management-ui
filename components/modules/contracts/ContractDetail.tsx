@@ -1,5 +1,5 @@
 import { Col, Row, Space } from 'antd';
-import Link from 'antd/es/typography/Link';
+import Link from 'antd/lib/typography/Link';
 import dayjs from 'dayjs';
 import { Contract } from '~/models/modules/contracts';
 import { formatMoney } from '~/utils/format';

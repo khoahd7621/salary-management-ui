@@ -26,6 +26,7 @@ export default function EditCompany() {
     if (companyId) {
       fetchCompany(companyId as string);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId]);
 
   const fetchCompany = async (companyId: string) => {

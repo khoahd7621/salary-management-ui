@@ -23,6 +23,7 @@ export default function CreateHolidayPage() {
     if (holidayId) {
       fetchHoliday();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [holidayId]);
 
   const fetchHoliday = async () => {

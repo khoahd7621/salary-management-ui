@@ -47,6 +47,8 @@ export default function CreateContractPage() {
         basicSalary: data.basicSalary,
         salaryType: SalaryType[Number(data.salaryType)],
         bhxh: data.bhxh,
+        bhyt: data.bhyt,
+        bhtn: data.bhtn,
         partnerId: data.companyId,
         partnerPrice: data.companyPrice,
         employeeId: data.employeeId,
@@ -167,6 +169,24 @@ export default function CreateContractPage() {
               />
             </Form.Item>
             <Form.Item label="BHXH" name="bhxh" rules={[{ required: true, message: 'Please input price of BHXH!' }]}>
+              <InputNumber
+                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                addonAfter="VNĐ"
+                min={0}
+                max={1000000000}
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+            <Form.Item label="BHYT" name="bhyt" rules={[{ required: true, message: 'Please input price of BHYT!' }]}>
+              <InputNumber
+                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                addonAfter="VNĐ"
+                min={0}
+                max={1000000000}
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+            <Form.Item label="BHTN" name="bhtn" rules={[{ required: true, message: 'Please input price of BHTN!' }]}>
               <InputNumber
                 formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 addonAfter="VNĐ"
