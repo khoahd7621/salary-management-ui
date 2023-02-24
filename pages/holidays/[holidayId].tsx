@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, message, Space, Typography } from 'antd';
+import { Button, DatePicker, Form, Input, message, Select, Space, Typography } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
@@ -32,6 +32,7 @@ export default function CreateHolidayPage() {
       form.setFieldsValue({
         name: holiday.holidayName || '',
         applyDate: [dayjs(holiday.startDate), dayjs(holiday.endDate)],
+        isPaid: holiday.isPaid,
       });
     } catch (error) {
       console.log(error);
@@ -41,13 +42,15 @@ export default function CreateHolidayPage() {
     setLoading(false);
   };
 
-  const onFinish = async (data: { name: string; applyDate: Dayjs[] }) => {
+  const onFinish = async (data: { name: string; applyDate: Dayjs[]; isPaid: boolean }) => {
     setSending(true);
     try {
-      await holidayApi.create({
+      await holidayApi.update({
+        id: holidayId as string,
         name: data.name,
         startDate: data.applyDate[0].toISOString(),
         endDate: data.applyDate[1].toISOString(),
+        isPaid: data.isPaid,
       });
       await router.push(`/${AppRoutes.holidays}`);
       await message.success('Holiday updated successfully!', 3);
@@ -92,6 +95,29 @@ export default function CreateHolidayPage() {
                 rules={[{ required: true, message: 'Please input apply date!' }]}
               >
                 <RangePicker format={'DD/MM/YYYY'} />
+              </Form.Item>
+              <Form.Item
+                label="Paid"
+                name="isPaid"
+                rules={[{ required: true, message: 'Please select pay or unpay in this holiday!' }]}
+              >
+                <Select
+                  showSearch
+                  allowClear
+                  onClear={() => form.setFieldsValue({ isPaid: '' })}
+                  onChange={(value) => form.setFieldsValue({ isPaid: value })}
+                  filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                  options={[
+                    {
+                      value: false,
+                      label: 'No',
+                    },
+                    {
+                      value: true,
+                      label: 'Yes',
+                    },
+                  ]}
+                />
               </Form.Item>
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

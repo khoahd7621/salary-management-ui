@@ -1,5 +1,7 @@
 import { Button, message, Space, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
 import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
@@ -17,7 +19,7 @@ const { serverRuntimeConfig } = getConfig();
 const HolidaysListPage: NextPageWithLayout = () => {
   const [data, setData] = useState<Holiday[]>();
   const [loading, setLoading] = useState(false);
-  const [tableParams, _setTableParams] = useState<TableParams>({
+  const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
       pageSize: 10,
@@ -44,6 +46,12 @@ const HolidaysListPage: NextPageWithLayout = () => {
       dataIndex: 'endDate',
       render: (_text, record) => dayjs(record.endDate).format('DD/MM/YYYY'),
       sorter: (a, b) => dayjs(a.endDate).diff(b.endDate),
+      width: '20%',
+    },
+    {
+      title: 'Is paid',
+      dataIndex: 'endDate',
+      render: (_text, record) => (record.isPaid ? 'Yes' : 'No'),
       width: '20%',
     },
     {
@@ -95,6 +103,23 @@ const HolidaysListPage: NextPageWithLayout = () => {
     setLoading(false);
   };
 
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<Holiday> | SorterResult<Holiday>[],
+    _extra: TableCurrentDataSource<Holiday>
+  ) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter,
+    });
+
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
+  };
+
   return (
     <>
       <Seo
@@ -122,6 +147,7 @@ const HolidaysListPage: NextPageWithLayout = () => {
             dataSource={data}
             pagination={tableParams.pagination}
             loading={loading}
+            onChange={handleTableChange}
           />
         </section>
       </Space>

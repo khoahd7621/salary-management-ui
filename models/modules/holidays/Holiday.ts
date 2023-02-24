@@ -4,4 +4,5 @@ export interface Holiday {
   startDate: string;
   endDate: string;
   isDeleted: boolean;
+  isPaid: boolean;
 }
