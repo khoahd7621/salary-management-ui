@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs';
 
-export interface CreateForm {
+export interface FormData {
   file: any;
   applyDate: Dayjs[];
   job: string;
@@ -13,8 +13,4 @@ export interface CreateForm {
   companyPrice: number;
   employeeId: string;
   type: string;
-}
-
-export interface UpdateForm extends CreateForm {
-  id: string;
 }
