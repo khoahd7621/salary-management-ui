@@ -1,7 +1,3 @@
-import { SalaryType } from './SalaryType';
-import { Status } from './Status';
-import { Type } from './Type';
-
 export interface CreatePayload {
   file: string;
   startDate: string;
@@ -12,7 +8,6 @@ export interface CreatePayload {
   partnerId: string;
   partnerPrice: number;
   employeeId: string;
-  contractType: Type;
-  salaryType: SalaryType;
-  status: Status;
+  contractType: string;
+  salaryType: string;
 }

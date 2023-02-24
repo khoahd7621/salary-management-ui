@@ -1,31 +1,59 @@
+import { uuidv4 } from '@firebase/util';
 import { Button, DatePicker, Form, Input, InputNumber, message, Select, Space, Typography } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
+import { initializeApp } from 'firebase/app';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
+import { contractApi } from '~/api-clients/modules/contract-api';
 import { Seo, UploadFiles } from '~/components';
-import { SelectCompanyModal } from '~/components/modules/contracts';
+import { SelectCompanyModal, SelectEmployeeModal } from '~/components/modules/contracts';
+import { firebaseConfig } from '~/firebaseconfig';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Company } from '~/models/modules/companies';
-import { CreateForm, SalaryType, Type } from '~/models/modules/contracts';
+import { CreateForm, CreatePayload, SalaryType, Type } from '~/models/modules/contracts';
+import { Employee } from '~/models/modules/employees';
 
 const { serverRuntimeConfig } = getConfig();
 
 export default function CreateContractPage() {
+  const router = useRouter();
   const { RangePicker } = DatePicker;
   const [form] = useForm();
-  const _router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [file, setFile] = useState<any>(null);
   const [company, setCompany] = useState<Company | null>(null);
+  const [employee, setEmployee] = useState<Employee | null>(null);
 
-  const onFinish = async (_data: CreateForm) => {
+  const onFinish = async (data: CreateForm) => {
     setLoading(true);
     try {
-      // await contractApi.create();
-      // await router.push(`/${AppRoutes.contracts}`);
+      const app = initializeApp(firebaseConfig);
+
+      const storage = getStorage(app);
+      const fileRef = ref(storage, `files/${file.name + '-' + uuidv4()}`);
+
+      const uploadResult = await uploadBytes(fileRef, file.originFileObj);
+      const fileUrl = await getDownloadURL(uploadResult.ref);
+
+      const payload: CreatePayload = {
+        file: fileUrl,
+        startDate: data.applyDate[0].toISOString(),
+        endDate: data.applyDate[1].toISOString(),
+        job: data.job,
+        basicSalary: data.basicSalary,
+        salaryType: SalaryType[Number(data.salaryType)],
+        bhxh: data.bhxh,
+        partnerId: data.companyId,
+        partnerPrice: data.companyPrice,
+        employeeId: data.employeeId,
+        contractType: Type[Number(data.type)],
+      };
+      await contractApi.create(payload);
+      await router.push(`/${AppRoutes.contracts}`);
       await message.success('Contract created successfully!', 3);
     } catch (error) {
       message.error('Something went wrong! Please refresh the page and try again!');
@@ -40,6 +68,16 @@ export default function CreateContractPage() {
     } else {
       setCompany(null);
       form.setFieldsValue({ companyId: '' });
+    }
+  };
+
+  const handleSelectEmployee = (employee: Employee | null) => {
+    if (employee) {
+      setEmployee(employee);
+      form.setFieldsValue({ employeeId: employee.employeeId });
+    } else {
+      setCompany(null);
+      form.setFieldsValue({ employeeId: '' });
     }
   };
 
@@ -164,7 +202,7 @@ export default function CreateContractPage() {
               name="employeeId"
               rules={[{ required: true, message: 'Please select an employee!' }]}
             >
-              <Input />
+              <SelectEmployeeModal setEmployee={handleSelectEmployee} employeeName={employee?.name || ''} />
             </Form.Item>
             <Form.Item label="Type" name="type" rules={[{ required: true, message: 'Please select contract type!' }]}>
               <Select

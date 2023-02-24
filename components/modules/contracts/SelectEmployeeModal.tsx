@@ -2,19 +2,19 @@ import { Button, Input, message, Modal } from 'antd';
 import Table, { ColumnsType } from 'antd/lib/table';
 import { useEffect, useState } from 'react';
 
-import { companyApi } from '~/api-clients/modules/company-api';
-import { Company } from '~/models/modules/companies';
+import { employeeApi } from '~/api-clients/modules/employee-api';
+import { Employee } from '~/models/modules/employees';
 
-export interface Props {
-  setCompany: (_value: Company | null) => void;
-  company?: Company;
-  companyName: string;
+export interface ComponentProps {
+  setEmployee: (_value: Employee | null) => void;
+  employee?: Employee;
+  employeeName: string;
 }
 
-export const SelectCompanyModal = ({ setCompany, companyName }: Props) => {
+export const SelectEmployeeModal = ({ setEmployee, employeeName }: ComponentProps) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [data, setData] = useState<Company[]>([]);
-  const [currentRow, setCurrentRow] = useState<Company | null>(null);
+  const [data, setData] = useState<Employee[]>([]);
+  const [currentRow, setCurrentRow] = useState<Employee | null>(null);
   const [searchText, setSearchText] = useState<string>('');
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export const SelectCompanyModal = ({ setCompany, companyName }: Props) => {
 
   const fetchData = async () => {
     try {
-      const response = await companyApi.getAll();
+      const response = await employeeApi.getAll();
       setData(response);
     } catch (error) {
       console.log(error);
@@ -31,22 +31,22 @@ export const SelectCompanyModal = ({ setCompany, companyName }: Props) => {
     }
   };
 
-  const columns: ColumnsType<Company> = [
+  const columns: ColumnsType<Employee> = [
     {
-      title: 'Name',
-      dataIndex: 'companyName',
+      title: 'Code',
+      dataIndex: 'code',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
+      title: 'Employee Name',
+      dataIndex: 'name',
     },
   ];
 
-  const handleSelectRow = (_selectedRowKeys: React.Key[], selectedRows: Company[]) => {
+  const handleSelectRow = (_selectedRowKeys: React.Key[], selectedRows: Employee[]) => {
     setCurrentRow(selectedRows[0]);
   };
 
-  const handleClickRow = (record: Company) => {
+  const handleClickRow = (record: Employee) => {
     return {
       onClick: () => {
         setCurrentRow(record);
@@ -55,20 +55,24 @@ export const SelectCompanyModal = ({ setCompany, companyName }: Props) => {
   };
 
   // Filter the data based on the search text
-  const filteredData = data.filter((item) => item.companyName.toLowerCase().includes(searchText.toLowerCase()));
+  const filteredData = data.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      item.code.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <>
       <Button style={{ width: '100%', textAlign: 'start' }} onClick={() => setModalOpen(true)}>
-        {companyName}
+        {employeeName}
       </Button>
       <Modal
-        title="Select company"
+        title="Select employee"
         centered
         open={modalOpen}
         onOk={() => {
           if (currentRow) {
-            setCompany(currentRow);
+            setEmployee(currentRow);
           }
           setModalOpen(false);
         }}
@@ -85,11 +89,11 @@ export const SelectCompanyModal = ({ setCompany, companyName }: Props) => {
         <Table
           rowSelection={{
             type: 'radio',
-            selectedRowKeys: currentRow ? [currentRow.companyId] : [],
+            selectedRowKeys: currentRow ? [currentRow.employeeId] : [],
             onChange: handleSelectRow,
           }}
           size="small"
-          rowKey={(record) => record.companyId}
+          rowKey={(record) => record.employeeId}
           onRow={handleClickRow}
           columns={columns}
           dataSource={filteredData}
