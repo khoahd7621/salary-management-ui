@@ -163,7 +163,7 @@ const LogLeavesListPage: NextPageWithLayout = () => {
         data={{
           title: 'Leaves | OT & Salary Management',
           description: 'List log leaves page',
-          url: `${serverRuntimeConfig.HOST_URL}/leaves`,
+          url: `${serverRuntimeConfig.HOST_URL}/${AppRoutes.leaves}`,
         }}
       />
 
@@ -176,7 +176,7 @@ const LogLeavesListPage: NextPageWithLayout = () => {
             onChange={(event) => setSearchValue(event.target.value)}
             style={{ width: 200 }}
           />
-          <Link href={`/${AppRoutes.overtimes}/create`} passHref>
+          <Link href={`/${AppRoutes.leaves}/create`} passHref>
             <Button type="primary" ghost>
               Create new log leave
             </Button>
