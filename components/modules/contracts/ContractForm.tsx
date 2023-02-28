@@ -53,7 +53,7 @@ export function ContractForm({
       setEmployee(employee);
       form?.setFieldsValue({ employeeId: employee.employeeId });
     } else {
-      setCompany(null);
+      setEmployee(null);
       form?.setFieldsValue({ employeeId: '' });
     }
   };
