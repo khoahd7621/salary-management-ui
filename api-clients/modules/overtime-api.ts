@@ -15,7 +15,7 @@ export const overtimeApi = {
     return axiosClient.post(`/${routes}`, overtime);
   },
   update: (overtime: UpdatePayload) => {
-    return axiosClient.put(`/${routes}/${overtime.id}`, overtime);
+    return axiosClient.put(`/${routes}`, overtime);
   },
   delete: (overtimeId: string) => {
     return axiosClient.delete(`/${routes}/${overtimeId}`, {

@@ -11,7 +11,7 @@ import { AppRoutes } from '~/models/constants/Routes';
 
 const { serverRuntimeConfig } = getConfig();
 
-export default function CreateHolidayPage() {
+export default function EditHolidayPage() {
   const router = useRouter();
   const { holidayId } = router.query;
   const [form] = Form.useForm();

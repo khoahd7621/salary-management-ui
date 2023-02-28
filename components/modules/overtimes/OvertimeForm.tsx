@@ -41,7 +41,11 @@ export function OvertimeForm({ form, onFinish, button, isSending, employee, setE
           name="employeeId"
           rules={[{ required: true, message: 'Please select an employee!' }]}
         >
-          <SelectEmployeeModal setEmployee={handleSelectEmployee} employeeName={employee?.name || ''} />
+          <SelectEmployeeModal
+            setEmployee={handleSelectEmployee}
+            employeeName={employee?.name || ''}
+            employee={employee}
+          />
         </Form.Item>
         <Form.Item label="Date" name="date" rules={[{ required: true, message: 'Please input date!' }]}>
           <DatePicker format={'DD/MM/YYYY'} />
