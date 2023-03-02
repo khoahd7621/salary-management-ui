@@ -22,7 +22,7 @@ export default function CreateLogOvertimePage() {
     setLoading(true);
     try {
       await overtimeApi.create({
-        overtimeDate: data.date.toISOString(),
+        overtimeDate: data.date.endOf('day').toISOString(),
         hours: data.hours,
         employeeId: employee?.employeeId || '',
       });

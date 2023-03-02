@@ -53,7 +53,7 @@ export default function EditLogOvertimePage() {
     try {
       await overtimeApi.update({
         id: overtimeId as string,
-        overtimeDate: data.date.toISOString(),
+        overtimeDate: data.date.endOf('day').toISOString(),
         hours: data.hours,
         employeeId: employee?.employeeId || '',
       });
