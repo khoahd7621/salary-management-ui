@@ -3,6 +3,7 @@ export const AppRoutes = {
   contracts: 'contracts',
   overtimes: 'overtimes',
   leaves: 'leaves',
+  salaries: 'salaries',
 };
 
 export const ApiRoutes = {
