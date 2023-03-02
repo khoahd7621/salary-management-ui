@@ -59,7 +59,7 @@ export function LeaveForm({ form, onFinish, button, isSending, employee, setEmpl
           <Button disabled={isSending} type="primary" htmlType="submit">
             {button}
           </Button>
-          <Link style={{ marginLeft: '16px' }} href={`/${AppRoutes.overtimes}`} passHref>
+          <Link style={{ marginLeft: '16px' }} href={`/${AppRoutes.leaves}`} passHref>
             <Button type="primary" danger>
               Cancel
             </Button>
