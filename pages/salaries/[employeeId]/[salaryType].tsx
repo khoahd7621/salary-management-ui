@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { salaryApi } from '~/api-clients/modules/salary-api';
+import PayRoll from '~/components/Payroll';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Salary } from '~/models/modules/salaries';
 
@@ -31,5 +32,15 @@ export default function CalculateSalaryPage() {
     }
   };
 
-  return <>{loading ? <div>Loading...</div> : <div>Salary</div>}</>;
+  return (
+    <>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <PayRoll data={data as Salary} />
+        </>
+      )}
+    </>
+  );
 }
