@@ -10,7 +10,7 @@ import { SelectEmployeeModal } from '../contracts';
 type FormValue = {
   employeeId: string;
   for: string;
-  time: Dayjs;
+  date: Dayjs;
 };
 
 export function CalculateForm() {
@@ -38,7 +38,17 @@ export function CalculateForm() {
       initialValues={{ hours: 1 }}
       onFinish={async (values: FormValue) => {
         setIsSending(true);
-        await route.push(`/${AppRoutes.salaries}/${values.employeeId}/${values.for}`);
+        await route.push(
+          {
+            pathname: `/${AppRoutes.salaries}/create`,
+            query: {
+              employeeId: values.employeeId,
+              salaryType: values.for,
+              date: values.date.endOf('day').toISOString(),
+            },
+          },
+          `/${AppRoutes.salaries}/create`
+        );
         setIsSending(false);
       }}
       autoComplete="off"
@@ -69,11 +79,11 @@ export function CalculateForm() {
             filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
             options={[
               {
-                value: 'staff-salary',
+                value: 'Staff',
                 label: 'Staff',
               },
               {
-                value: 'partner-salary',
+                value: 'Partner',
                 label: 'Partner',
               },
             ]}
@@ -81,7 +91,7 @@ export function CalculateForm() {
         </Form.Item>
         <Form.Item
           label="Period"
-          name="time"
+          name="date"
           rules={[{ required: true, message: 'Please choose who will receive this payroll!' }]}
         >
           <DatePicker picker="month" format={'MM-YYYY'} />

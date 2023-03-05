@@ -12,6 +12,7 @@ import styles from '~/styles/components/payroll.module.scss';
 
 export interface PayrollProps {
   data: Salary;
+  type: string;
 }
 
 interface EditSalary {
@@ -20,7 +21,7 @@ interface EditSalary {
   leaveHours: number;
 }
 
-export default function Payroll({ data }: PayrollProps) {
+export default function Payroll({ data, type }: PayrollProps) {
   const router = useRouter();
 
   const [salary, setSalary] = useState<Salary>(data);
@@ -59,8 +60,9 @@ export default function Payroll({ data }: PayrollProps) {
           <DeploymentUnitOutlined />
         </div>
         <div className={styles['infor']}>
-          <h1>Employee salary slip</h1>
-          <h3>{dayjs().format('MMMM YYYY')}</h3>
+          {type === 'Staff' && <h1>Employee salary slip</h1>}
+          {type === 'Partner' && <h1>Partner salary slip</h1>}
+          <h3>{dayjs(data.periodStartDate).format('MMMM YYYY')}</h3>
           <div>Unit: VND</div>
         </div>
       </div>
@@ -106,10 +108,6 @@ export default function Payroll({ data }: PayrollProps) {
             </td>
           </tr>
           <tr>
-            <td className={styles['title']}>Actual hours:</td>
-            <td className={styles['align-left']}>{salary.realityWorkHours}</td>
-          </tr>
-          <tr>
             <td className={styles['title']}>Overtime hours:</td>
             <td className={styles['align-left']}>
               {!onEdit ? (
@@ -138,6 +136,10 @@ export default function Payroll({ data }: PayrollProps) {
                 />
               )}
             </td>
+          </tr>
+          <tr>
+            <td className={styles['title']}>Actual hours:</td>
+            <td className={styles['align-left']}>{salary.realityWorkHours}</td>
           </tr>
           <tr>
             <td className={styles['title']}>Base salary:</td>
@@ -182,31 +184,35 @@ export default function Payroll({ data }: PayrollProps) {
               </table>
             </td>
           </tr>
-          <tr>
-            <td className={styles['title']}>Items to be deducted from salary:</td>
-            <td>
-              <table width={'100%'} border={1}>
-                <tbody>
-                  <tr>
-                    <td className={styles['sub-title']}>Payment of social insurance contributions:</td>
-                    <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.socialInsurance)}</td>
-                  </tr>
-                  <tr>
-                    <td className={styles['sub-title']}>Payment of accident insurance contributions:</td>
-                    <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.accidentInsurance)}</td>
-                  </tr>
-                  <tr>
-                    <td className={styles['sub-title']}>Payment of health insurance contributions:</td>
-                    <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.healthInsurance)}</td>
-                  </tr>
-                  <tr>
-                    <td className={styles['sub-title']}>Payment of TAX:</td>
-                    <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.tax)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
+          {type === 'Staff' && (
+            <tr>
+              <td className={styles['title']}>Items to be deducted from salary:</td>
+              <td>
+                <table width={'100%'} border={1}>
+                  <tbody>
+                    <tr>
+                      <td className={styles['sub-title']}>Payment of social insurance contributions:</td>
+                      <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.socialInsurance)}</td>
+                    </tr>
+                    <tr>
+                      <td className={styles['sub-title']}>Payment of accident insurance contributions:</td>
+                      <td className={styles['align-left']}>
+                        {formatMoney.VietnamDong.format(salary.accidentInsurance)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className={styles['sub-title']}>Payment of health insurance contributions:</td>
+                      <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.healthInsurance)}</td>
+                    </tr>
+                    <tr>
+                      <td className={styles['sub-title']}>Payment of TAX:</td>
+                      <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.tax)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          )}
           <tr>
             <td className={styles['title']}>Actually received:</td>
             <td className={styles['align-left']}>

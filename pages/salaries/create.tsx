@@ -7,23 +7,27 @@ import Payroll from '~/components/Payroll';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Salary } from '~/models/modules/salaries';
 
-export default function CalculateSalaryPage() {
+export default function CalculateSalaryPages() {
   const route = useRouter();
-  const { employeeId, salaryType } = route.query;
+  const { employeeId, salaryType, date } = route.query;
 
   const [data, setData] = useState<Salary | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (employeeId && salaryType) {
+    if (employeeId && salaryType && date) {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [employeeId, salaryType]);
+  }, [employeeId, salaryType, date]);
 
   const fetchData = async () => {
     try {
-      const response = await salaryApi.calculateSalary(employeeId as string, salaryType as string);
+      const response = await salaryApi.calculateSalary({
+        employeeId: employeeId as string,
+        type: salaryType as string,
+        date: date as string,
+      });
       setData(response);
       setLoading(false);
     } catch (error: any) {
@@ -32,15 +36,5 @@ export default function CalculateSalaryPage() {
     }
   };
 
-  return (
-    <>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <>
-          <Payroll data={data as Salary} />
-        </>
-      )}
-    </>
-  );
+  return <>{loading ? <div>Loading...</div> : <Payroll data={data as Salary} type={salaryType as string} />}</>;
 }

@@ -15,5 +15,7 @@ export interface Salary {
   totalDeductions: number;
   leaveHours: number;
   finalIncome: number;
+  periodStartDate: string;
+  periodEndDate: string;
   contract: Contract;
 }
