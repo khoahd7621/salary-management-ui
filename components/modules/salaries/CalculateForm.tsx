@@ -1,10 +1,17 @@
-import { Button, Form, Select, Space } from 'antd';
+import { Button, DatePicker, Form, Select, Space } from 'antd';
+import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AppRoutes } from '~/models/constants/Routes';
 
 import { Employee } from '~/models/modules/employees';
 import { SelectEmployeeModal } from '../contracts';
+
+type FormValue = {
+  employeeId: string;
+  for: string;
+  time: Dayjs;
+};
 
 export function CalculateForm() {
   const route = useRouter();
@@ -29,7 +36,7 @@ export function CalculateForm() {
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
       initialValues={{ hours: 1 }}
-      onFinish={async (values) => {
+      onFinish={async (values: FormValue) => {
         setIsSending(true);
         await route.push(`/${AppRoutes.salaries}/${values.employeeId}/${values.for}`);
         setIsSending(false);
@@ -71,6 +78,13 @@ export function CalculateForm() {
               },
             ]}
           />
+        </Form.Item>
+        <Form.Item
+          label="Period"
+          name="time"
+          rules={[{ required: true, message: 'Please choose who will receive this payroll!' }]}
+        >
+          <DatePicker picker="month" format={'MM-YYYY'} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
