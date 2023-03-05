@@ -1,11 +1,15 @@
-import { message } from 'antd';
+import { message, Space, Typography } from 'antd';
+import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { salaryApi } from '~/api-clients/modules/salary-api';
+import { Seo } from '~/components';
 import Payroll from '~/components/Payroll';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Salary } from '~/models/modules/salaries';
+
+const { serverRuntimeConfig } = getConfig();
 
 export default function CalculateSalaryPages() {
   const route = useRouter();
@@ -17,6 +21,8 @@ export default function CalculateSalaryPages() {
   useEffect(() => {
     if (employeeId && salaryType && date) {
       fetchData();
+    } else {
+      route.push(`/${AppRoutes.salaries}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [employeeId, salaryType, date]);
@@ -36,5 +42,27 @@ export default function CalculateSalaryPages() {
     }
   };
 
-  return <>{loading ? <div>Loading...</div> : <Payroll data={data as Salary} type={salaryType as string} />}</>;
+  return (
+    <>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <Seo
+            data={{
+              title: 'Temporary payslip | OT & Salary Management',
+              description: 'Temporary payslip page',
+              url: `${serverRuntimeConfig.HOST_URL}/${AppRoutes.salaries}/create`,
+            }}
+          />
+
+          <Space style={{ width: '100%' }} direction="vertical" size="large">
+            <Typography.Title level={3}>Temporary payslip</Typography.Title>
+
+            <Payroll data={data as Salary} type={salaryType as string} />
+          </Space>
+        </>
+      )}
+    </>
+  );
 }

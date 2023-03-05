@@ -34,12 +34,31 @@ export default function Payroll({ data, type }: PayrollProps) {
 
   const handleEditOk = () => {
     setOnEdit(false);
-    setSalary({
-      ...salary,
-      standardWorkHours: editSalary.standardWorkHours,
-      overtimeHours: editSalary.overTimeHours,
-      leaveHours: editSalary.leaveHours,
-      realityWorkHours: editSalary.standardWorkHours - editSalary.leaveHours,
+    setSalary((prevSalary) => {
+      const realityWorkHoursTmp = editSalary.standardWorkHours - editSalary.leaveHours;
+      const baseSalaryPerHourTmp = salary.baseSalary / editSalary.standardWorkHours;
+      const overTimeSalaryPerHourTmp = baseSalaryPerHourTmp * 1.5;
+      const totalBonusTmp = overTimeSalaryPerHourTmp * editSalary.overTimeHours;
+      const totalDeductionTmp = baseSalaryPerHourTmp * editSalary.leaveHours;
+      const totalSalaryTmp = salary.baseSalary + totalBonusTmp - totalDeductionTmp;
+
+      return {
+        ...prevSalary,
+        standardWorkHours: editSalary.standardWorkHours,
+        overtimeHours: editSalary.overTimeHours,
+        leaveHours: editSalary.leaveHours,
+        realityWorkHours: realityWorkHoursTmp,
+        baseSalaryPerHour: baseSalaryPerHourTmp,
+        ovetimeSalaryPerHour: overTimeSalaryPerHourTmp,
+        totalBonus: totalBonusTmp,
+        totalDeductions: totalDeductionTmp,
+        totalSalary: totalSalaryTmp,
+        finalIncome:
+          type === 'Staff'
+            ? totalSalaryTmp -
+              (prevSalary.socialInsurance + prevSalary.healthInsurance + prevSalary.accidentInsurance + prevSalary.tax)
+            : totalSalaryTmp,
+      };
     });
   };
 
@@ -93,7 +112,7 @@ export default function Payroll({ data, type }: PayrollProps) {
             <td className={styles['align-left']}>{salary.contract.job}</td>
           </tr>
           <tr>
-            <td className={styles['title']}>Standard working hours:</td>
+            <td className={styles['title']}>(A) Standard working hours:</td>
             <td className={styles['align-left']}>
               {!onEdit ? (
                 salary.standardWorkHours
@@ -108,7 +127,7 @@ export default function Payroll({ data, type }: PayrollProps) {
             </td>
           </tr>
           <tr>
-            <td className={styles['title']}>Overtime hours:</td>
+            <td className={styles['title']}>(B) Overtime hours:</td>
             <td className={styles['align-left']}>
               {!onEdit ? (
                 salary.overtimeHours
@@ -123,7 +142,7 @@ export default function Payroll({ data, type }: PayrollProps) {
             </td>
           </tr>
           <tr>
-            <td className={styles['title']}>Number of hours off:</td>
+            <td className={styles['title']}>(C) Number of hours off:</td>
             <td className={styles['align-left']}>
               {!onEdit ? (
                 salary.leaveHours
@@ -138,11 +157,11 @@ export default function Payroll({ data, type }: PayrollProps) {
             </td>
           </tr>
           <tr>
-            <td className={styles['title']}>Actual hours:</td>
+            <td className={styles['title']}>(D = A + B - C) Actual hours:</td>
             <td className={styles['align-left']}>{salary.realityWorkHours}</td>
           </tr>
           <tr>
-            <td className={styles['title']}>Base salary:</td>
+            <td className={styles['title']}>(E) Base salary:</td>
             <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.baseSalary || 0)}</td>
           </tr>
           <tr>
@@ -151,29 +170,29 @@ export default function Payroll({ data, type }: PayrollProps) {
               <table width={'100%'} border={1}>
                 <tbody>
                   <tr>
-                    <td className={styles['sub-title']}>Basic salary/hour:</td>
+                    <td className={styles['sub-title']}>(F = E / A) Basic salary/hour:</td>
                     <td className={styles['align-left']}>
                       {formatMoney.VietnamDong.format(salary.baseSalaryPerHour || 0)}
                     </td>
                   </tr>
                   <tr>
-                    <td className={styles['sub-title']}>Overtime salary/hour:</td>
+                    <td className={styles['sub-title']}>(G = F * 1.5) Overtime salary/hour:</td>
                     <td className={styles['align-left']}>
                       {formatMoney.VietnamDong.format(salary.ovetimeSalaryPerHour || 0)}
                     </td>
                   </tr>
                   <tr>
-                    <td className={styles['sub-title']}>Total bonus:</td>
+                    <td className={styles['sub-title']}>(H = G * B) Total bonus:</td>
                     <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.totalBonus || 0)}</td>
                   </tr>
                   <tr>
-                    <td className={styles['sub-title']}>Salary deductions:</td>
+                    <td className={styles['sub-title']}>(I = F * C) Salary deductions:</td>
                     <td className={styles['align-left']}>
                       {formatMoney.VietnamDong.format(salary.totalDeductions || 0)}
                     </td>
                   </tr>
                   <tr>
-                    <td className={styles['sub-title']}>Total income:</td>
+                    <td className={styles['sub-title']}>(J = E + H - I) Total income:</td>
                     <td className={styles['align-left']}>
                       {formatMoney.VietnamDong.format(
                         salary.baseSalary + salary.totalBonus - salary.totalDeductions || 0
@@ -186,26 +205,30 @@ export default function Payroll({ data, type }: PayrollProps) {
           </tr>
           {type === 'Staff' && (
             <tr>
-              <td className={styles['title']}>Items to be deducted from salary:</td>
+              <td className={styles['title']}>
+                (O = K + L + M + N)
+                <br />
+                Items to be deducted from salary:
+              </td>
               <td>
                 <table width={'100%'} border={1}>
                   <tbody>
                     <tr>
-                      <td className={styles['sub-title']}>Payment of social insurance contributions:</td>
+                      <td className={styles['sub-title']}>(K) Payment of social insurance contributions:</td>
                       <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.socialInsurance)}</td>
                     </tr>
                     <tr>
-                      <td className={styles['sub-title']}>Payment of accident insurance contributions:</td>
+                      <td className={styles['sub-title']}>(L) Payment of accident insurance contributions:</td>
                       <td className={styles['align-left']}>
                         {formatMoney.VietnamDong.format(salary.accidentInsurance)}
                       </td>
                     </tr>
                     <tr>
-                      <td className={styles['sub-title']}>Payment of health insurance contributions:</td>
+                      <td className={styles['sub-title']}>(M) Payment of health insurance contributions:</td>
                       <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.healthInsurance)}</td>
                     </tr>
                     <tr>
-                      <td className={styles['sub-title']}>Payment of TAX:</td>
+                      <td className={styles['sub-title']}>(N) Payment of TAX:</td>
                       <td className={styles['align-left']}>{formatMoney.VietnamDong.format(salary.tax)}</td>
                     </tr>
                   </tbody>
@@ -214,7 +237,7 @@ export default function Payroll({ data, type }: PayrollProps) {
             </tr>
           )}
           <tr>
-            <td className={styles['title']}>Actually received:</td>
+            <td className={styles['title']}>{type === 'Staff' ? '(J - O)' : '(J)'} Actually received:</td>
             <td className={styles['align-left']}>
               <span className={styles['total']}>{formatMoney.VietnamDong.format(salary.finalIncome || 0)}</span>
             </td>
