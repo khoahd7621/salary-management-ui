@@ -1,7 +1,9 @@
 import {
+  CalendarOutlined,
   DashboardOutlined,
   DownOutlined,
   FileDoneOutlined,
+  FileZipOutlined,
   GlobalOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -10,7 +12,6 @@ import {
   ScheduleOutlined,
   SmileOutlined,
   TeamOutlined,
-  CalendarOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, Layout, Menu, MenuProps, message, Space, Typography } from 'antd';
 import Link from 'next/link';
@@ -19,6 +20,7 @@ import React, { useEffect, useState } from 'react';
 
 import { AuthPage } from '~/components';
 import { useAuth } from '~/hooks';
+import { AppRoutes } from '~/models/constants/Routes';
 import { LayoutProps } from '~/models/layouts';
 
 import styles from '~/styles/layout/main.module.scss';
@@ -58,57 +60,64 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
     getItem(
       'Dashboard',
       '/dashboard',
-      <Link href="/dashboard" passHref>
+      <Link href={'/dashboard'} passHref>
         <DashboardOutlined />
       </Link>
     ),
     getItem(
       'Manage Companies',
-      '/companies',
-      <Link href="/companies" passHref>
+      `/${AppRoutes.companies}`,
+      <Link href={`/${AppRoutes.companies}`} passHref>
         <GlobalOutlined />
       </Link>
     ),
     getItem(
       'Manage Employees',
-      '/employees',
-      <Link href="/employees" passHref>
+      `/${AppRoutes.employees}`,
+      <Link href={`/${AppRoutes.employees}`} passHref>
         <TeamOutlined />
       </Link>
     ),
     getItem(
       'Manage Holidays',
-      '/holidays',
-      <Link href="/holidays" passHref>
+      `/${AppRoutes.holidays}`,
+      <Link href={`/${AppRoutes.holidays}`} passHref>
         <CalendarOutlined />
       </Link>
     ),
     getItem(
       'Manage Contracts',
-      '/contracts',
-      <Link href="/contracts" passHref>
+      `/${AppRoutes.contracts}`,
+      <Link href={`/${AppRoutes.contracts}`} passHref>
         <FileDoneOutlined />
       </Link>
     ),
     getItem(
       'Log OT',
-      '/overtimes',
-      <Link href="/overtimes" passHref>
+      `/${AppRoutes.overtimes}`,
+      <Link href={`/${AppRoutes.overtimes}`} passHref>
         <NodeExpandOutlined />
       </Link>
     ),
     getItem(
       'Log Leave',
-      '/leaves',
-      <Link href="/leaves" passHref>
+      `/${AppRoutes.leaves}`,
+      <Link href={`/${AppRoutes.leaves}`} passHref>
         <ScheduleOutlined />
       </Link>
     ),
     getItem(
       'Create Salary',
-      '/salaries',
-      <Link href="/salaries" passHref>
+      `/${AppRoutes.salaries}`,
+      <Link href={`/${AppRoutes.salaries}`} passHref>
         <MoneyCollectOutlined />
+      </Link>
+    ),
+    getItem(
+      'Manage Payslips',
+      `/${AppRoutes.payslips}`,
+      <Link href={`/${AppRoutes.payslips}`} passHref>
+        <FileZipOutlined />
       </Link>
     ),
   ];
