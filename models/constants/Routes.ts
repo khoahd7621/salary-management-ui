@@ -1,4 +1,5 @@
 export const AppRoutes = {
+  dashboard: 'dashboard',
   companies: 'companies',
   employees: 'employees',
   holidays: 'holidays',

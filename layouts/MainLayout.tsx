@@ -59,8 +59,8 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
   const itemsMenu: MenuItem[] = [
     getItem(
       'Dashboard',
-      '/dashboard',
-      <Link href={'/dashboard'} passHref>
+      `/${AppRoutes.dashboard}`,
+      <Link href={`/${AppRoutes.dashboard}`} passHref>
         <DashboardOutlined />
       </Link>
     ),

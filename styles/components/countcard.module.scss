@@ -1,0 +1,38 @@
+.card-container {
+  border-radius: 6px;
+  padding: 16px;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+
+  .title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .text {
+      margin: 0;
+      font-size: 16px;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .number {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+    white-space: nowrap;
+    width: calc(100% - 16px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
