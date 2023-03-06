@@ -1,8 +1,4 @@
-import { Contract } from '../contracts';
-import { Type } from './Type';
-
-export interface Payslip {
-  payHistoryId: string;
+export interface Payload {
   employeeId: string;
   contractId: string;
   baseSalary: number;
@@ -19,6 +15,5 @@ export interface Payslip {
   payrollPeriodStart: string;
   payrollPeriodEnd: string;
   note: string;
-  paidType: Type;
-  contract: Contract;
+  paidType: string;
 }

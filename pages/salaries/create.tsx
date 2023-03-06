@@ -59,7 +59,7 @@ export default function CalculateSalaryPages() {
           <Space style={{ width: '100%' }} direction="vertical" size="large">
             <Typography.Title level={3}>Temporary payslip</Typography.Title>
 
-            <Payroll data={data as Salary} type={salaryType as string} />
+            <Payroll data={data as Salary} type={salaryType as string} employeeId={employeeId as string} />
           </Space>
         </>
       )}
