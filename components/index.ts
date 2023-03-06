@@ -4,4 +4,4 @@ export * from './Loading';
 export * from './ButtonWithModal';
 export * from './UploadImage';
 export * from './UploadFiles';
-export * from './Payroll';
+export * from './PayrollTmp';

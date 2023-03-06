@@ -1,21 +1,21 @@
 import { DeploymentUnitOutlined } from '@ant-design/icons';
-import { Button, Input, InputNumber, message, Space } from 'antd';
+import { Button, Input, InputNumber, Space } from 'antd';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import { payslipApi } from '~/api-clients/modules/payslip-api';
-import { AppRoutes } from '~/models/constants/Routes';
-import { Payload } from '~/models/modules/payslips';
 import { Salary } from '~/models/modules/salaries';
 import { formatMoney } from '~/utils/format';
 
 import styles from '~/styles/components/payroll.module.scss';
 
-export interface PayrollProps {
+export interface PayrollTmpProps {
   data: Salary;
   type: string;
-  employeeId: string;
+  button: 'Save' | 'Update';
+  isSending: boolean;
+  handleClickSave: (_salary: Salary, _note: string) => void;
+  handleClickCancel: () => Promise<void>;
+  textNote?: string;
 }
 
 interface EditSalary {
@@ -24,14 +24,20 @@ interface EditSalary {
   leaveHours: number;
 }
 
-export default function Payroll({ data, type, employeeId }: PayrollProps) {
+export const PayrollTmp = ({
+  data,
+  type,
+  button,
+  isSending,
+  handleClickCancel,
+  handleClickSave,
+  textNote = '',
+}: PayrollTmpProps) => {
   const { TextArea } = Input;
-  const router = useRouter();
 
   const [salary, setSalary] = useState<Salary>(data);
   const [onEdit, setOnEdit] = useState<boolean>(false);
-  const [note, setNote] = useState<string>('');
-  const [sending, setSending] = useState<boolean>(false);
+  const [note, setNote] = useState<string>(textNote);
   const [editSalary, setEditSalary] = useState<EditSalary>({
     standardWorkHours: data.standardWorkHours,
     overTimeHours: data.overtimeHours,
@@ -76,37 +82,6 @@ export default function Payroll({ data, type, employeeId }: PayrollProps) {
       overTimeHours: data.overtimeHours,
       leaveHours: data.leaveHours,
     });
-  };
-
-  const handleSavePayslip = async () => {
-    setSending(true);
-    try {
-      const payload: Payload = {
-        employeeId: employeeId,
-        contractId: salary.contract.contractId,
-        baseSalary: salary.baseSalary,
-        workHours: salary.realityWorkHours,
-        otHours: salary.overtimeHours,
-        leaveHours: salary.leaveHours,
-        socialInsurance: salary.socialInsurance,
-        accidentInsurance: salary.accidentInsurance,
-        healthInsurance: salary.healthInsurance,
-        paidDate: dayjs().endOf('day').toISOString(),
-        salaryAmount: salary.finalIncome,
-        bonus: salary.totalBonus,
-        deductions: salary.totalDeductions,
-        payrollPeriodStart: salary.periodStartDate,
-        payrollPeriodEnd: salary.periodEndDate,
-        note: note,
-        paidType: type,
-      };
-      await payslipApi.create(payload);
-      await router.push(`/${AppRoutes.payslips}`);
-      await message.success('Save payslip successfully');
-    } catch (error) {
-      await message.error('Oops! Something went wrong. Please try again later');
-    }
-    setSending(false);
   };
 
   return (
@@ -284,17 +259,28 @@ export default function Payroll({ data, type, employeeId }: PayrollProps) {
 
       <section style={{ marginBottom: '32px' }}>
         <h4>Note:</h4>
-        <TextArea rows={4} placeholder="Enter note" maxLength={255} onChange={(e) => setNote(e.target.value)} />
+        <TextArea
+          rows={4}
+          placeholder="Enter note"
+          maxLength={255}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+        />
       </section>
 
       <Space size="middle">
-        <Button disabled={onEdit || sending} type="primary" style={{ background: 'red' }} onClick={handleSavePayslip}>
-          Save
+        <Button
+          disabled={onEdit || isSending}
+          type="primary"
+          style={{ background: 'red' }}
+          onClick={() => handleClickSave(salary, note)}
+        >
+          {button}
         </Button>
-        <Button disabled={sending} onClick={async () => await router.push(`/${AppRoutes.salaries}`)}>
+        <Button disabled={isSending} onClick={handleClickCancel}>
           Cancel
         </Button>
       </Space>
     </div>
   );
-}
+};

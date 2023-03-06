@@ -1,12 +1,14 @@
 import { message, Space, Typography } from 'antd';
+import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { payslipApi } from '~/api-clients/modules/payslip-api';
 
 import { salaryApi } from '~/api-clients/modules/salary-api';
-import { Seo } from '~/components';
-import Payroll from '~/components/Payroll';
+import { PayrollTmp, Seo } from '~/components';
 import { AppRoutes } from '~/models/constants/Routes';
+import { Payload } from '~/models/modules/payslips';
 import { Salary } from '~/models/modules/salaries';
 
 const { serverRuntimeConfig } = getConfig();
@@ -17,6 +19,7 @@ export default function CalculateSalaryPages() {
 
   const [data, setData] = useState<Salary | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [sending, setSending] = useState<boolean>(false);
 
   useEffect(() => {
     if (employeeId && salaryType && date) {
@@ -42,6 +45,41 @@ export default function CalculateSalaryPages() {
     }
   };
 
+  const handleClickSavePayslip = async (salary: Salary, note: string) => {
+    setSending(true);
+    try {
+      const payload: Payload = {
+        employeeId: employeeId as string,
+        contractId: salary.contract.contractId,
+        baseSalary: salary.baseSalary,
+        workHours: salary.realityWorkHours,
+        otHours: salary.overtimeHours,
+        leaveHours: salary.leaveHours,
+        socialInsurance: salary.socialInsurance,
+        accidentInsurance: salary.accidentInsurance,
+        healthInsurance: salary.healthInsurance,
+        paidDate: dayjs().endOf('day').toISOString(),
+        salaryAmount: salary.finalIncome,
+        bonus: salary.totalBonus,
+        deductions: salary.totalDeductions,
+        payrollPeriodStart: salary.periodStartDate,
+        payrollPeriodEnd: salary.periodEndDate,
+        note: note,
+        paidType: salaryType as string,
+      };
+      await payslipApi.create(payload);
+      await route.push(`/${AppRoutes.payslips}`);
+      await message.success('Save payslip successfully');
+    } catch (error) {
+      await message.error('Oops! Something went wrong. Please try again later');
+    }
+    setSending(false);
+  };
+
+  const handleClickCancel = async () => {
+    await route.push(`/${AppRoutes.salaries}`);
+  };
+
   return (
     <>
       {loading ? (
@@ -59,7 +97,14 @@ export default function CalculateSalaryPages() {
           <Space style={{ width: '100%' }} direction="vertical" size="large">
             <Typography.Title level={3}>Temporary payslip</Typography.Title>
 
-            <Payroll data={data as Salary} type={salaryType as string} employeeId={employeeId as string} />
+            <PayrollTmp
+              data={data as Salary}
+              type={salaryType as string}
+              button="Save"
+              isSending={sending}
+              handleClickSave={handleClickSavePayslip}
+              handleClickCancel={handleClickCancel}
+            />
           </Space>
         </>
       )}
