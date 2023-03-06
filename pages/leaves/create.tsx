@@ -22,8 +22,8 @@ export default function CreateLogLeavePage() {
     setLoading(true);
     try {
       await leaveApi.create({
-        startDate: data.applyDate[0].toISOString(),
-        endDate: data.applyDate[1].toISOString(),
+        startDate: data.applyDate[0].endOf('day').toISOString(),
+        endDate: data.applyDate[1].endOf('day').toISOString(),
         reason: data.reason,
         employeeId: employee?.employeeId || '',
       });

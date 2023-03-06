@@ -63,9 +63,17 @@ export default function EditEmployeePage() {
         const uploadResult = await uploadBytes(imageRef, image.originFileObj);
         const imageUrl = await getDownloadURL(uploadResult.ref);
 
-        await employeeApi.update({ ...data, image: imageUrl, dateOfBirth: data.dateOfBirth.toISOString() });
+        await employeeApi.update({
+          ...data,
+          image: imageUrl,
+          dateOfBirth: data.dateOfBirth.endOf('day').toISOString(),
+        });
       } else {
-        await employeeApi.update({ ...data, image: oldImageUrl, dateOfBirth: data.dateOfBirth.toISOString() });
+        await employeeApi.update({
+          ...data,
+          image: oldImageUrl,
+          dateOfBirth: data.dateOfBirth.endOf('day').toISOString(),
+        });
       }
       await router.push('/employees');
       await message.success('Update employee successfully!');

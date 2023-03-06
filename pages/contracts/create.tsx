@@ -39,8 +39,8 @@ export default function CreateContractPage() {
 
       const payload: CreatePayload = {
         file: fileUrl,
-        startDate: data.applyDate[0].toISOString(),
-        endDate: data.applyDate[1].toISOString(),
+        startDate: data.applyDate[0].endOf('day').toISOString(),
+        endDate: data.applyDate[1].endOf('day').toISOString(),
         job: data.job,
         basicSalary: data.basicSalary,
         salaryType: SalaryType[Number(data.salaryType)],

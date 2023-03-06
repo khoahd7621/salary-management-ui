@@ -31,7 +31,7 @@ export default function CreateEmployeePage() {
       const uploadResult = await uploadBytes(imageRef, image.originFileObj);
       const imageUrl = await getDownloadURL(uploadResult.ref);
 
-      await employeeApi.create({ ...data, image: imageUrl, dateOfBirth: data.dateOfBirth.toISOString() });
+      await employeeApi.create({ ...data, image: imageUrl, dateOfBirth: data.dateOfBirth.endOf('day').toISOString() });
       await router.push('/employees');
       await message.success('Create employee successfully!');
     } catch (error) {
