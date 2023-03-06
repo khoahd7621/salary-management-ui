@@ -11,6 +11,7 @@ export const AppRoutes = {
 };
 
 export const ApiRoutes = {
+  dashboard: 'dashboard',
   companies: 'companies',
   employees: 'employees',
   holidays: 'holidays',

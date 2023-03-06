@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Cell, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Sector } from 'recharts';
+import { Data } from '~/models/modules/dashboard';
 
-export interface ContractChartProps {}
-
-const data = [
-  { name: 'Active', value: 400 },
-  { name: 'Expired', value: 300 },
-];
+export interface ContractChartProps {
+  data: Data[];
+}
 
 const COLORS = ['#82CD47', '#C21010'];
 
@@ -63,7 +61,7 @@ const renderActiveShape = (props: PieLabelRenderProps) => {
   );
 };
 
-export function ContractChart(_props: ContractChartProps) {
+export function ContractChart({ data }: ContractChartProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onPieEnter = (_: any, index: number) => {
@@ -71,25 +69,31 @@ export function ContractChart(_props: ContractChartProps) {
   };
 
   return (
-    <ResponsiveContainer width="100%" height={260}>
-      <PieChart>
-        <Pie
-          activeIndex={activeIndex}
-          activeShape={renderActiveShape}
-          data={data}
-          cx="50%"
-          cy="50%"
-          innerRadius={60}
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-          onMouseEnter={onPieEnter}
-        >
-          {data.map((_entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
+    <>
+      {data.length ? (
+        <ResponsiveContainer width="100%" height={260}>
+          <PieChart>
+            <Pie
+              activeIndex={activeIndex}
+              activeShape={renderActiveShape}
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={60}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+              onMouseEnter={onPieEnter}
+            >
+              {data.map((_entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      ) : (
+        <span>No data</span>
+      )}
+    </>
   );
 }
