@@ -1,11 +1,12 @@
 import { ApiRoutes } from '~/models/constants/Routes';
+import { PaginationResponse } from '~/models/modules/PaginationResponse';
 import { Payload, Payslip } from '~/models/modules/payslips';
 import axiosClient from '../axios-client';
 
 const routes = ApiRoutes.payslips;
 
 export const payslipApi = {
-  getAll: (): Promise<Payslip[]> => {
+  getAll: (): Promise<PaginationResponse<Payslip[]>> => {
     return axiosClient.get(`/${routes}`);
   },
   getById: (payslipId: string): Promise<Payslip> => {

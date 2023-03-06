@@ -1,6 +1,7 @@
 import { Button, Input, message, Space, Table, Typography } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
+import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -12,6 +13,7 @@ import { TableParams } from '~/models/components/Table';
 import { AppRoutes } from '~/models/constants/Routes';
 import { NextPageWithLayout } from '~/models/layouts';
 import { Payslip } from '~/models/modules/payslips';
+import { formatMoney } from '~/utils/format';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -32,33 +34,37 @@ const PayslipListPage: NextPageWithLayout = () => {
   const columns: ColumnsType<Payslip> = [
     {
       title: 'Type',
-      dataIndex: '',
+      dataIndex: 'paidType',
       ellipsis: true,
     },
     {
       title: 'Employee',
-      dataIndex: '',
+      render: (_text, record) => record.contract.employee.name,
+      dataIndex: 'contract',
     },
     {
       title: 'Company',
-      dataIndex: '',
+      render: (_text, record) => record.contract.partner.companyName,
+      dataIndex: 'contract',
       ellipsis: true,
     },
     {
       title: 'Date',
-      dataIndex: '',
+      dataIndex: 'paidDate',
+      render: (_text, record) => dayjs(record.paidDate).format('MM/YYYY'),
       ellipsis: true,
     },
     {
       title: 'Total money',
-      dataIndex: '',
+      dataIndex: 'salaryAmount',
+      render: (_text, record) => formatMoney.VietnamDong.format(record.salaryAmount || 0),
       ellipsis: true,
     },
     {
       title: 'Action',
       dataIndex: 'action',
       width: '20%',
-      render: (_text, _record) => {
+      render: (_text, record) => {
         return (
           <Space>
             <Link href={`/${AppRoutes.payslips}/${'N/a'}`}>
@@ -71,8 +77,20 @@ const PayslipListPage: NextPageWithLayout = () => {
             </Link>
             <ButtonWithModal
               modalTitle="Warning"
-              modalContent={`Are you sure to delete payslip type "${'N/A'}" between employee "${'N/A'}" and company "${'N/A'}"`}
-              onOk={() => {}}
+              modalContent={`Are you sure to delete payslip type "${record.paidType}" between employee "${
+                record.contract.employee.name
+              }" and company "${record.contract.partner.companyName}" in "${dayjs(record.paidDate).format('MM/YYYY')}"`}
+              onOk={() => {
+                payslipApi
+                  .delete(record.payHistoryId)
+                  .then(() => {
+                    message.success(`Delete payslip successfully!`);
+                    fetchData();
+                  })
+                  .catch(() => {
+                    message.error('Something went wrong! Please refresh page and try again!');
+                  });
+              }}
             >
               Delete
             </ButtonWithModal>
@@ -94,10 +112,9 @@ const PayslipListPage: NextPageWithLayout = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Todo: call api to get data
-      const _response = payslipApi.getAll();
-      setData([]);
-      setFilteredData([]);
+      const response = await payslipApi.getAll();
+      setData(response.results);
+      setFilteredData(response.results);
     } catch (error) {
       console.log(error);
       message.error('Something went wrong! Please refresh the page and try again!');
