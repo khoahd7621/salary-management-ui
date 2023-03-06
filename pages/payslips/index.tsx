@@ -35,29 +35,46 @@ const PayslipListPage: NextPageWithLayout = () => {
     {
       title: 'Type',
       dataIndex: 'paidType',
+      filters: [
+        {
+          text: 'Staff',
+          value: 'Staff',
+        },
+        {
+          text: 'Partner',
+          value: 'Partner',
+        },
+      ],
+      filterSearch: true,
+      onFilter: (value: string | number | boolean, record) => record.paidType.includes(value as string),
+      sorter: (a, b) => a.paidType.length - b.paidType.length,
       ellipsis: true,
     },
     {
       title: 'Employee',
-      render: (_text, record) => record.contract.employee.name,
       dataIndex: 'contract',
+      render: (_text, record) => record.contract.employee.name,
+      sorter: (a, b) => a.contract.employee.name.length - b.contract.employee.name.length,
     },
     {
       title: 'Company',
-      render: (_text, record) => record.contract.partner.companyName,
       dataIndex: 'contract',
+      render: (_text, record) => record.contract.partner.companyName,
+      sorter: (a, b) => a.contract.partner.companyName.length - b.contract.partner.companyName.length,
       ellipsis: true,
     },
     {
       title: 'Date',
       dataIndex: 'paidDate',
       render: (_text, record) => dayjs(record.paidDate).format('MM/YYYY'),
+      sorter: (a, b) => dayjs(a.paidDate).diff(b.paidDate.length),
       ellipsis: true,
     },
     {
       title: 'Total money',
       dataIndex: 'salaryAmount',
       render: (_text, record) => formatMoney.VietnamDong.format(record.salaryAmount || 0),
+      sorter: (a, b) => a.salaryAmount - b.salaryAmount,
       ellipsis: true,
     },
     {
@@ -67,12 +84,12 @@ const PayslipListPage: NextPageWithLayout = () => {
       render: (_text, record) => {
         return (
           <Space>
-            <Link href={`/${AppRoutes.payslips}/${'N/a'}`}>
+            <Link href={`/${AppRoutes.payslips}/${record.payHistoryId}/view`}>
               <Button type="primary" style={{ background: '#3a9c6f' }}>
                 View
               </Button>
             </Link>
-            <Link href={`/${AppRoutes.payslips}/${'N/a'}`}>
+            <Link href={`/${AppRoutes.payslips}/${record.payHistoryId}/edit`}>
               <Button type="primary">Edit</Button>
             </Link>
             <ButtonWithModal
@@ -123,7 +140,16 @@ const PayslipListPage: NextPageWithLayout = () => {
   };
 
   const filterData = () => {
-    return data.filter((item) => item);
+    return data.filter(
+      (item) =>
+        item.contract.employee.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.contract.partner.companyName.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.paidType.toLowerCase().includes(searchValue.toLowerCase()) ||
+        dayjs(item.paidDate).format('MM/YYYY').toLowerCase().includes(searchValue.toLowerCase()) ||
+        formatMoney.VietnamDong.format(item.salaryAmount || 0)
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
+    );
   };
 
   const handleTableChange = (
