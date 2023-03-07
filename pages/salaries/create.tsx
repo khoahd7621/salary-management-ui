@@ -49,21 +49,10 @@ export default function CalculateSalaryPages() {
     setSending(true);
     try {
       const payload: Payload = {
+        ...salary,
         employeeId: employeeId as string,
         contractId: salary.contract.contractId,
-        baseSalary: salary.baseSalary,
-        workHours: salary.realityWorkHours,
-        otHours: salary.overtimeHours,
-        leaveHours: salary.leaveHours,
-        socialInsurance: salary.socialInsurance,
-        accidentInsurance: salary.accidentInsurance,
-        healthInsurance: salary.healthInsurance,
         paidDate: dayjs().endOf('day').toISOString(),
-        salaryAmount: salary.finalIncome,
-        bonus: salary.totalBonus,
-        deductions: salary.totalDeductions,
-        payrollPeriodStart: salary.periodStartDate,
-        payrollPeriodEnd: salary.periodEndDate,
         note: note,
         paidType: salaryType as string,
       };

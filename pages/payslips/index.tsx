@@ -72,9 +72,9 @@ const PayslipListPage: NextPageWithLayout = () => {
     },
     {
       title: 'Total money',
-      dataIndex: 'salaryAmount',
-      render: (_text, record) => formatMoney.VietnamDong.format(record.salaryAmount || 0),
-      sorter: (a, b) => a.salaryAmount - b.salaryAmount,
+      dataIndex: 'finalIncome',
+      render: (_text, record) => formatMoney.VietnamDong.format(record.finalIncome || 0),
+      sorter: (a, b) => a.finalIncome - b.finalIncome,
       ellipsis: true,
     },
     {
@@ -146,7 +146,7 @@ const PayslipListPage: NextPageWithLayout = () => {
         item.contract.partner.companyName.toLowerCase().includes(searchValue.toLowerCase()) ||
         item.paidType.toLowerCase().includes(searchValue.toLowerCase()) ||
         dayjs(item.paidDate).format('MM/YYYY').toLowerCase().includes(searchValue.toLowerCase()) ||
-        formatMoney.VietnamDong.format(item.salaryAmount || 0)
+        formatMoney.VietnamDong.format(item.finalIncome || 0)
           .toLowerCase()
           .includes(searchValue.toLowerCase())
     );
