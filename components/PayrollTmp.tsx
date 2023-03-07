@@ -16,6 +16,7 @@ export interface PayrollTmpProps {
   handleClickSave: (_salary: Salary, _note: string) => void;
   handleClickCancel: () => Promise<void>;
   textNote?: string;
+  paidDate?: string;
 }
 
 interface EditSalary {
@@ -32,6 +33,7 @@ export const PayrollTmp = ({
   handleClickCancel,
   handleClickSave,
   textNote = '',
+  paidDate = '',
 }: PayrollTmpProps) => {
   const { TextArea } = Input;
 
@@ -93,7 +95,11 @@ export const PayrollTmp = ({
         <div className={styles['infor']}>
           {type === 'Staff' && <h1>Employee salary slip</h1>}
           {type === 'Partner' && <h1>Partner salary slip</h1>}
-          <h3>{dayjs(data.periodStartDate).format('MMMM YYYY')}</h3>
+          <h3>
+            {dayjs(paidDate || data.periodStartDate)
+              .endOf('day')
+              .format('MMMM YYYY')}
+          </h3>
           <div>Unit: VND</div>
         </div>
       </div>
