@@ -1,4 +1,6 @@
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Button, message, Space, Typography } from 'antd';
+import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -6,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 import { payslipApi } from '~/api-clients/modules/payslip-api';
 import { Seo } from '~/components';
-import { Payslip } from '~/components/modules/payslips';
+import { Payslip, PayslipPdf } from '~/components/modules/payslips';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Payslip as PayslipModel } from '~/models/modules/payslips';
 
@@ -37,6 +39,15 @@ export default function ViewPayslipPage() {
     setLoading(false);
   };
 
+  const fileName = `payslip_${payslip?.paidType.toLowerCase()}_${payslip?.contract.employee.name
+    .toLowerCase()
+    .replace(' ', '-')}_${payslip?.contract.partner.companyName.toLocaleLowerCase().replace(' ', '-')}_${dayjs(
+    payslip?.paidDate
+  )
+    .format('MMMM YYYY')
+    .toLocaleLowerCase()
+    .replace(' ', '-')}.pdf`;
+
   return (
     <>
       <Seo
@@ -53,6 +64,12 @@ export default function ViewPayslipPage() {
         <Space style={{ width: '100%' }} direction="vertical" size="middle">
           <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography.Title level={3}>Payslip</Typography.Title>
+
+            {payslip && (
+              <PDFDownloadLink document={<PayslipPdf data={payslip} />} fileName={fileName}>
+                {({ loading }) => (loading ? 'Loading export pdf...' : 'Export PDF file!')}
+              </PDFDownloadLink>
+            )}
           </section>
 
           <section>
