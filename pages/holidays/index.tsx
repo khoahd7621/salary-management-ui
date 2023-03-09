@@ -133,6 +133,11 @@ const HolidaysListPage: NextPageWithLayout = () => {
       <Space style={{ width: '100%' }} direction="vertical" size="large">
         <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography.Title level={3}>List holidays</Typography.Title>
+
+          <a href={'/assets/HolidayTemplate.xlsx'} download="HolidayTemplate" target="_blank" rel="noreferrer noopener">
+            <Button>Download Excel Template</Button>
+          </a>
+
           <Link href={`/${AppRoutes.holidays}/create`} passHref>
             <Button type="primary" ghost>
               Create new holiday
