@@ -1,5 +1,6 @@
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
+import { ButtonType } from 'antd/es/button';
 
 interface Props {
   children?: React.ReactNode;
@@ -16,6 +17,10 @@ interface Props {
   isLink?: boolean;
   width?: number;
   okType?: 'primary' | 'danger' | 'ghost' | 'dashed' | 'link' | 'text' | 'default';
+  buttonType?: ButtonType;
+  danger?: boolean;
+  buttonColor?: string;
+  buttonTextColor?: string;
 }
 
 export const ButtonWithModal = ({
@@ -33,6 +38,10 @@ export const ButtonWithModal = ({
   isLink = false,
   width = 500,
   okType = 'danger',
+  buttonType = 'primary',
+  danger = true,
+  buttonColor = '',
+  buttonTextColor = '',
 }: Props) => {
   const showModal = () => {
     Modal[type]({
@@ -58,7 +67,12 @@ export const ButtonWithModal = ({
           {children}
         </div>
       ) : (
-        <Button onClick={showModal} type="primary" danger>
+        <Button
+          onClick={showModal}
+          type={buttonType}
+          danger={danger}
+          style={{ backgroundColor: buttonColor || '', color: buttonTextColor || '' }}
+        >
           {children}
         </Button>
       )}

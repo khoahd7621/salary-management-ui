@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 import { employeeApi } from '~/api-clients/modules/employee-api';
 import { ButtonWithModal, Seo } from '~/components';
-import { Detail } from '~/components/modules/employees';
+import { Detail, LogLeaveModal, LogOTModal } from '~/components/modules/employees';
 import { TableParams } from '~/models/components/Table';
 import { NextPageWithLayout } from '~/models/layouts';
 import { Employee } from '~/models/modules/employees';
@@ -25,6 +25,8 @@ const EmployeesListPage: NextPageWithLayout = () => {
       pageSize: 10,
     },
   });
+  const [employeeIdOT, setEmployeeIdOT] = useState<string>('');
+  const [employeeIdLeave, setEmployeeIdLeave] = useState<string>('');
 
   const columns: ColumnsType<Employee> = [
     {
@@ -128,6 +130,18 @@ const EmployeesListPage: NextPageWithLayout = () => {
             >
               Delete
             </ButtonWithModal>
+            <Button
+              style={{ backgroundColor: '#ccc', color: '#000' }}
+              onClick={() => setEmployeeIdOT(record.employeeId)}
+            >
+              Log OT
+            </Button>
+            <Button
+              style={{ backgroundColor: '#fca130', color: '#fff' }}
+              onClick={() => setEmployeeIdLeave(record.employeeId)}
+            >
+              Log Leave
+            </Button>
           </Space>
         );
       },
@@ -198,6 +212,9 @@ const EmployeesListPage: NextPageWithLayout = () => {
           />
         </section>
       </Space>
+
+      <LogOTModal employeeId={employeeIdOT} setEmployeeId={setEmployeeIdOT} />
+      <LogLeaveModal employeeId={employeeIdLeave} setEmployeeId={setEmployeeIdLeave} />
     </>
   );
 };
