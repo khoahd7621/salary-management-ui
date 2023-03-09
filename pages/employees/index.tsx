@@ -1,4 +1,4 @@
-import { Button, message, Space, Table, Typography } from 'antd';
+import { Button, Input, message, Space, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { employeeApi } from '~/api-clients/modules/employee-api';
 import { ButtonWithModal, Seo } from '~/components';
 import { Detail, LogLeaveModal, LogOTModal } from '~/components/modules/employees';
+import { useDebounce } from '~/hooks';
 import { TableParams } from '~/models/components/Table';
 import { NextPageWithLayout } from '~/models/layouts';
 import { Employee } from '~/models/modules/employees';
@@ -17,8 +18,10 @@ import { Employee } from '~/models/modules/employees';
 const { serverRuntimeConfig } = getConfig();
 
 const EmployeesListPage: NextPageWithLayout = () => {
-  const [data, setData] = useState<Employee[]>();
+  const [data, setData] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
+  const [filteredData, setFilteredData] = useState<Employee[]>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -27,6 +30,8 @@ const EmployeesListPage: NextPageWithLayout = () => {
   });
   const [employeeIdOT, setEmployeeIdOT] = useState<string>('');
   const [employeeIdLeave, setEmployeeIdLeave] = useState<string>('');
+
+  const debouncedValue = useDebounce(searchValue, 500);
 
   const columns: ColumnsType<Employee> = [
     {
@@ -152,16 +157,30 @@ const EmployeesListPage: NextPageWithLayout = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setFilteredData(filterData());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedValue]);
+
   const fetchData = async () => {
     setLoading(true);
     try {
       const response = await employeeApi.getAll();
       setData(response);
+      setFilteredData(response);
     } catch (error) {
       console.log(error);
       message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
+  };
+
+  const filterData = () => {
+    return data.filter(
+      (item) =>
+        item.code?.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+        item.name?.toLowerCase().includes(debouncedValue.toLowerCase())
+    );
   };
 
   const handleTableChange = (
@@ -194,6 +213,12 @@ const EmployeesListPage: NextPageWithLayout = () => {
       <Space style={{ width: '100%' }} direction="vertical" size="large">
         <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography.Title level={3}>List employees</Typography.Title>
+          <Input
+            placeholder="Input search text"
+            allowClear
+            onChange={(event) => setSearchValue(event.target.value)}
+            style={{ width: 200 }}
+          />
           <Link href="/employees/create" passHref>
             <Button type="primary" ghost>
               Create new employee
@@ -205,7 +230,7 @@ const EmployeesListPage: NextPageWithLayout = () => {
             scroll={{ x: 800 }}
             columns={columns}
             rowKey={(record) => record.employeeId}
-            dataSource={data}
+            dataSource={filteredData}
             pagination={tableParams.pagination}
             loading={loading}
             onChange={handleTableChange}
