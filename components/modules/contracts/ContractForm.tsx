@@ -157,6 +157,15 @@ export function ContractForm({
             style={{ width: '100%' }}
           />
         </Form.Item>
+        <Form.Item label="Tax" name="tax" rules={[{ required: true, message: 'Please input price of TAX!' }]}>
+          <InputNumber
+            formatter={(value) => addCommasToNumber(value)}
+            addonAfter="VNĐ"
+            min={0}
+            max={1000000000}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
         <Form.Item noStyle>
           <Form.Item label="Company" name="companyId" rules={[{ required: true, message: 'Please select a company!' }]}>
             <SelectCompanyModal setCompany={handleSelectCompany} companyName={company?.companyName || ''} />

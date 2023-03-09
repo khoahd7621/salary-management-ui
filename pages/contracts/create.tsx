@@ -47,6 +47,7 @@ export default function CreateContractPage() {
         bhxh: data.bhxh,
         bhyt: data.bhyt,
         bhtn: data.bhtn,
+        tax: data.tax,
         partnerId: data.companyId,
         partnerPrice: data.companyPrice,
         employeeId: data.employeeId,

@@ -7,6 +7,7 @@ export interface CreatePayload {
   bhxh: number;
   bhyt: number;
   bhtn: number;
+  tax: number;
   partnerId: string;
   partnerPrice: number;
   employeeId: string;
