@@ -1,14 +1,44 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
+import { useState } from 'react';
+
+import { profileApi } from '~/api-clients/modules/profile-api';
+
+type FormData = {
+  oldPassword: string;
+  newPassword: string;
+  confirm: string;
+};
 
 export function FormChangePassword() {
+  const [form] = Form.useForm();
+
+  const [isSending, setIsSending] = useState(false);
+
+  const handleChangePassword = async (values: FormData) => {
+    setIsSending(true);
+    try {
+      await profileApi.changePassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      });
+      message.success('Change password successfully!', 3);
+    } catch (error: any) {
+      console.log(error);
+      if (error?.response.status === 400) message.error(error?.response.data);
+      else message.error('Change password failed! Please try again later.', 3);
+    }
+    form.resetFields();
+    setIsSending(false);
+  };
+
   return (
     <Form
-      name="basic"
+      form={form}
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
-      onFinish={() => {}}
+      onFinish={handleChangePassword}
+      disabled={isSending}
       autoComplete="off"
     >
       <Form.Item
@@ -61,7 +91,7 @@ export function FormChangePassword() {
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
+        <Button disabled={isSending} type="primary" htmlType="submit">
           Change password
         </Button>
       </Form.Item>
