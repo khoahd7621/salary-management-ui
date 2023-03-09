@@ -19,6 +19,7 @@ export const ApiRoutes = {
   contracts: 'contracts',
   overtimes: 'overtimeLogs',
   leaves: 'leaveLog',
+  leavesV2: 'leave-log',
   salaries: 'salary-calculating',
   payslips: 'paid-history',
 };
