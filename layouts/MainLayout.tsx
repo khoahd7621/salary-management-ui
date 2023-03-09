@@ -10,6 +10,7 @@ import {
   MoneyCollectOutlined,
   NodeExpandOutlined,
   ScheduleOutlined,
+  SettingOutlined,
   SmileOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
@@ -120,6 +121,13 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
         <FileZipOutlined />
       </Link>
     ),
+    getItem(
+      'Settings',
+      `/${AppRoutes.settings}`,
+      <Link href={`/${AppRoutes.settings}`} passHref>
+        <SettingOutlined />
+      </Link>
+    ),
   ];
 
   const items: MenuProps['items'] = [
@@ -161,6 +169,7 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
         return;
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.asPath]);
 
   return (
@@ -218,7 +227,7 @@ export const MainLayout = ({ children }: LayoutProps): React.ReactElement => {
             onClick: () => setCollapsed((collapsed) => !collapsed),
           })}
 
-          <Dropdown menu={{ items }}>
+          <Dropdown menu={{ items }} dropdownRender={(menu) => <div className="dropdown-logout">{menu}</div>}>
             <a onClick={(e) => e.preventDefault()}>
               <Space>
                 Welcome to system

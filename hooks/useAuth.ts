@@ -8,7 +8,7 @@ import { Payload } from '~/models/modules/login';
 import { User } from '~/models/modules/User';
 
 export const useAuth = (options?: Partial<PublicConfiguration>) => {
-  const { data, error, mutate } = useSWR('/admin/profile', {
+  const { data, error, mutate } = useSWR<User, any, any>('/admin/profile', {
     dedupingInterval: 60 * 60 * 24 * 1000,
     revalidateOnFocus: false,
     ...options,

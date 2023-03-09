@@ -62,10 +62,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
           });
 
           (res as NextApiResponse).status(200).json({
-            id: responseData.id,
+            adminId: responseData.adminId,
             name: responseData.name,
+            image: responseData.image,
             phoneNumber: responseData.phoneNumber,
-            userName: responseData.userName,
+            email: responseData.email,
+            username: responseData.username,
           });
         } catch (error) {
           (res as NextApiResponse).status(500).json({ message: 'Something went wrong' });

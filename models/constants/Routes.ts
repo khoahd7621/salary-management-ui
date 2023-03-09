@@ -8,6 +8,7 @@ export const AppRoutes = {
   leaves: 'leaves',
   salaries: 'salaries',
   payslips: 'payslips',
+  settings: 'settings',
 };
 
 export const ApiRoutes = {
