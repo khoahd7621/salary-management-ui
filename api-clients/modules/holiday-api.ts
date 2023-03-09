@@ -1,3 +1,4 @@
+import { AxiosProgressEvent } from 'axios';
 import { AppRoutes } from '~/models/constants/Routes';
 import { CreatePayload, Holiday, UpdatePayload } from '~/models/modules/holidays';
 import axiosClient from '../axios-client';
@@ -16,6 +17,13 @@ export const holidayApi = {
       holidayName: holiday.name,
       startDate: holiday.startDate,
       endDate: holiday.endDate,
+    });
+  },
+  import: (file: any, onUploadProgress: (_progressEvent: AxiosProgressEvent) => void): Promise<string> => {
+    const form = new FormData();
+    form.append('file', file);
+    return axiosClient.post(`/${routes}/import`, form, {
+      onUploadProgress: onUploadProgress,
     });
   },
   update: (holiday: UpdatePayload) => {

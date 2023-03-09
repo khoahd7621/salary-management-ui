@@ -1,12 +1,16 @@
-import { Button, message, Space, Table, Typography } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, message, Space, Table, Typography, Upload } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
+import { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
 import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
+import { UploadRequestOption } from 'rc-upload/lib/interface';
 import { useEffect, useState } from 'react';
 
+import { AxiosProgressEvent } from 'axios';
 import { holidayApi } from '~/api-clients/modules/holiday-api';
 import { ButtonWithModal, Seo } from '~/components';
 import { TableParams } from '~/models/components/Table';
@@ -120,6 +124,45 @@ const HolidaysListPage: NextPageWithLayout = () => {
     }
   };
 
+  const beforeUpload = (file: RcFile) => {
+    const isExcel = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    if (!isExcel) {
+      message.error('You can only upload XLSX file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('File must smaller than 2MB!');
+    }
+    return (isExcel && isLt2M) || Upload.LIST_IGNORE;
+  };
+
+  const customRequest = async ({ file, onSuccess, onProgress, onError }: UploadRequestOption) => {
+    try {
+      await holidayApi.import(file, (progressEvent: AxiosProgressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
+        onProgress?.({ percent: percentCompleted });
+      });
+      onSuccess?.(file);
+    } catch (error: any) {
+      onError?.(error);
+    }
+  };
+
+  function onChange(info: UploadChangeParam<UploadFile<any>>) {
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+      fetchData();
+      setTableParams({
+        pagination: {
+          current: 1,
+          pageSize: 10,
+        },
+      });
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  }
+
   return (
     <>
       <Seo
@@ -134,9 +177,20 @@ const HolidaysListPage: NextPageWithLayout = () => {
         <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography.Title level={3}>List holidays</Typography.Title>
 
-          <a href={'/assets/HolidayTemplate.xlsx'} download="HolidayTemplate" target="_blank" rel="noreferrer noopener">
-            <Button>Download Excel Template</Button>
-          </a>
+          <Space>
+            <Upload onChange={onChange} beforeUpload={beforeUpload} customRequest={customRequest}>
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+
+            <a
+              href={'/assets/HolidayTemplate.xlsx'}
+              download="HolidayTemplate"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <Button>Download Excel Template</Button>
+            </a>
+          </Space>
 
           <Link href={`/${AppRoutes.holidays}/create`} passHref>
             <Button type="primary" ghost>
