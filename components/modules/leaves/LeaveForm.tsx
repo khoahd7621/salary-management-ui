@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, FormInstance, Input, Space } from 'antd';
+import { Button, DatePicker, Form, FormInstance, Input, InputNumber, Space } from 'antd';
 import Link from 'next/link';
 
 import { AppRoutes } from '~/models/constants/Routes';
@@ -15,7 +15,6 @@ export interface LeaveFormProps {
 }
 
 export function LeaveForm({ form, onFinish, button, isSending, employee, setEmployee }: LeaveFormProps) {
-  const { RangePicker } = DatePicker;
   const handleSelectEmployee = (employee: Employee | null) => {
     if (employee) {
       setEmployee(employee);
@@ -48,8 +47,11 @@ export function LeaveForm({ form, onFinish, button, isSending, employee, setEmpl
             employee={employee}
           />
         </Form.Item>
-        <Form.Item label="Apply date" name="applyDate" rules={[{ required: true, message: 'Please input date!' }]}>
-          <RangePicker format={'DD/MM/YYYY'} />
+        <Form.Item label="Leave date" name="leaveDate" rules={[{ required: true, message: 'Please input date!' }]}>
+          <DatePicker format={'DD/MM/YYYY'} />
+        </Form.Item>
+        <Form.Item label="Hours" name="leaveHours" rules={[{ required: true, message: 'Please input hours!' }]}>
+          <InputNumber min={1} max={8} style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item label="Reason" name="reason" rules={[{ required: true, message: 'Please input reason!' }]}>
           <Input />

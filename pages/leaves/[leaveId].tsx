@@ -4,12 +4,12 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-import { leaveApi } from '~/api-clients/modules/leave-api';
+import { leaveApi } from '~/api-clients/modules/leave-api-v2';
 import { Seo } from '~/components';
 import { LeaveForm } from '~/components/modules/leaves';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Employee } from '~/models/modules/employees';
-import { FormData } from '~/models/modules/leaves';
+import { FormData } from '~/models/modules/leaves/v2';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -32,13 +32,14 @@ export default function EditLogLeavePage() {
     try {
       const leave = await leaveApi.getById(leaveId as string);
       form.setFieldsValue({
+        leaveDate: dayjs(leave.date),
+        leaveHours: leave.hours,
         reason: leave.reason,
-        applyDate: [dayjs(leave.startDate), dayjs(leave.endDate)],
-        employeeId: leave.employeeId,
+        employeeId: leave.employee.employeeId,
       });
       setEmployee({
         ...leave.employee,
-        employeeId: leave.employeeId,
+        employeeId: leave.employee.employeeId,
       });
     } catch (error) {
       console.log(error);
@@ -51,10 +52,9 @@ export default function EditLogLeavePage() {
   const onFinish = async (data: FormData) => {
     setSending(true);
     try {
-      await leaveApi.update({
-        leaveTimeId: leaveId as string,
-        startDate: data.applyDate[0].endOf('day').toISOString(),
-        endDate: data.applyDate[1].endOf('day').toISOString(),
+      await leaveApi.update(leaveId as string, {
+        leaveDate: data.leaveDate.endOf('day').toISOString(),
+        leaveHours: data.leaveHours,
         reason: data.reason,
         employeeId: employee?.employeeId || '',
       });

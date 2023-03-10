@@ -3,12 +3,12 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import { leaveApi } from '~/api-clients/modules/leave-api';
+import { leaveApi } from '~/api-clients/modules/leave-api-v2';
 import { Seo } from '~/components';
 import { LeaveForm } from '~/components/modules/leaves';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Employee } from '~/models/modules/employees';
-import { FormData } from '~/models/modules/leaves';
+import { FormData } from '~/models/modules/leaves/v2';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -22,8 +22,8 @@ export default function CreateLogLeavePage() {
     setLoading(true);
     try {
       await leaveApi.create({
-        startDate: data.applyDate[0].endOf('day').toISOString(),
-        endDate: data.applyDate[1].endOf('day').toISOString(),
+        leaveDate: data.leaveDate.endOf('day').toISOString(),
+        leaveHours: data.leaveHours,
         reason: data.reason,
         employeeId: employee?.employeeId || '',
       });

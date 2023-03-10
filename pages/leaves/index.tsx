@@ -5,14 +5,14 @@ import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { leaveApi } from '~/api-clients/modules/leave-api';
 
+import { leaveApi } from '~/api-clients/modules/leave-api-v2';
 import { ButtonWithModal, Seo } from '~/components';
 import { useDebounce } from '~/hooks';
 import { TableParams } from '~/models/components/Table';
 import { AppRoutes } from '~/models/constants/Routes';
 import { NextPageWithLayout } from '~/models/layouts';
-import { Leave } from '~/models/modules/leaves';
+import { Leave } from '~/models/modules/leaves/v2';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -51,18 +51,17 @@ const LogLeavesListPage: NextPageWithLayout = () => {
       ellipsis: true,
     },
     {
-      title: 'Start date',
-      dataIndex: 'startDate',
-      render: (_text, record) => dayjs(record.startDate).format('DD/MM/YYYY'),
-      sorter: (a, b) => dayjs(a.startDate).diff(b.startDate),
+      title: 'Date',
+      dataIndex: 'date',
+      render: (_text, record) => dayjs(record.date).format('DD/MM/YYYY'),
+      sorter: (a, b) => dayjs(a.date).diff(b.date),
       width: '15%',
       ellipsis: true,
     },
     {
-      title: 'End date',
-      dataIndex: 'endDate',
-      render: (_text, record) => dayjs(record.endDate).format('DD/MM/YYYY'),
-      sorter: (a, b) => dayjs(a.endDate).diff(b.endDate),
+      title: 'Hours',
+      dataIndex: 'hours',
+      sorter: (a, b) => a.hours - b.hours,
       width: '15%',
       ellipsis: true,
     },
@@ -78,19 +77,17 @@ const LogLeavesListPage: NextPageWithLayout = () => {
       render: (_text, record) => {
         return (
           <Space>
-            <Link href={`/${AppRoutes.leaves}/${record.leaveTimeId}`}>
+            <Link href={`/${AppRoutes.leaves}/${record.leaveLogId}`}>
               <Button type="primary">Edit</Button>
             </Link>
             <ButtonWithModal
               modalTitle="Warning"
               modalContent={`Are you sure to delete log leave of employee "${
                 record.employee?.name || 'N/A'
-              }" from date "${dayjs(record.startDate).format('DD/MM/YYYY')}" to date "${dayjs(record.endDate).format(
-                'DD/MM/YYYY'
-              )}" with reason "${record.reason}"?`}
+              }" at date "${dayjs(record.date).format('DD/MM/YYYY')}" with reason "${record.reason}"?`}
               onOk={() => {
                 leaveApi
-                  .delete(record.leaveTimeId)
+                  .delete(record.leaveLogId)
                   .then(() => {
                     message.success(`Delete log leave of "${record.employee?.name || 'N/A'}" successfully!`);
                     fetchData();
@@ -134,8 +131,8 @@ const LogLeavesListPage: NextPageWithLayout = () => {
     return data.filter(
       (item) =>
         item.employee?.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.startDate.includes(searchValue) ||
-        item.endDate.includes(searchValue) ||
+        dayjs(item.date).format('DD/MM/YYYY').includes(searchValue) ||
+        item.hours.toString().includes(searchValue) ||
         item.reason.toLowerCase().includes(searchValue.toLowerCase())
     );
   };
@@ -186,7 +183,7 @@ const LogLeavesListPage: NextPageWithLayout = () => {
           <Table
             scroll={{ x: 800 }}
             columns={columns}
-            rowKey={(record) => record.leaveTimeId}
+            rowKey={(record) => record.leaveLogId}
             dataSource={filteredData}
             pagination={tableParams.pagination}
             loading={loading}
