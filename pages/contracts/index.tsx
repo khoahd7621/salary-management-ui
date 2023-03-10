@@ -1,11 +1,12 @@
 import { Button, message, Space, Tag, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import Table from 'antd/lib/table';
+import Table, { TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
 import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { contractApi } from '~/api-clients/modules/contract-api';
+import { contractApi, GetPagination } from '~/api-clients/modules/contract-api';
 
 import { ButtonWithModal, Seo } from '~/components';
 import { ContractDetail } from '~/components/modules/contracts/ContractDetail';
@@ -20,10 +21,13 @@ const ContractsListPage: NextPageWithLayout = () => {
   const { Title } = Typography;
   const [data, setData] = useState<Contract[]>();
   const [loading, setLoading] = useState(false);
-  const [tableParams, _setTableParams] = useState<TableParams>({
+  const [tableParams, setTableParams] = useState<TableParams>({
+    sortField: undefined,
+    sortOrder: undefined,
     pagination: {
       current: 1,
       pageSize: 10,
+      total: 0,
     },
   });
 
@@ -146,7 +150,12 @@ const ContractsListPage: NextPageWithLayout = () => {
                   .delete(record.contractId)
                   .then(() => {
                     message.success('Delete contract successfully!');
-                    fetchData();
+                    fetchData({
+                      pageNumber: 1,
+                      pageSize: 10,
+                      sortBy: undefined,
+                      isDesc: undefined,
+                    });
                   })
                   .catch((error) => {
                     console.log(error);
@@ -163,19 +172,66 @@ const ContractsListPage: NextPageWithLayout = () => {
   ];
 
   useEffect(() => {
-    fetchData();
+    fetchData({
+      pageNumber: 1,
+      pageSize: 10,
+      sortBy: undefined,
+      isDesc: undefined,
+    });
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (param: GetPagination) => {
     setLoading(true);
     try {
-      const response = await contractApi.getAllWithPagination();
+      const response = await contractApi.getAllWithPagination(param);
       setData(response.results);
+      setTableParams((prev) => {
+        return {
+          ...prev,
+          pagination: {
+            current: response.currentPage,
+            pageSize: response.itemPerPage,
+            total: response.totalCount,
+          },
+        };
+      });
     } catch (error) {
       console.log(error);
       message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
+  };
+
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<Contract> | SorterResult<Contract>[],
+    _extra: TableCurrentDataSource<Contract>
+  ) => {
+    let sortBy = undefined;
+    let isDesc = undefined;
+    if ((sorter as SorterResult<Contract>).column) {
+      sortBy = (sorter as SorterResult<Contract>).field;
+      isDesc = (sorter as SorterResult<Contract>).order === 'descend';
+    }
+    fetchData({
+      pageNumber: pagination.current || 1,
+      pageSize: pagination.pageSize || 10,
+      isDesc: isDesc,
+      sortBy: sortBy as string,
+    });
+    setTableParams({
+      pagination: {
+        ...pagination,
+        current: pagination.current,
+      },
+      filters,
+      ...sorter,
+    });
+
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
   };
 
   return (
@@ -205,6 +261,7 @@ const ContractsListPage: NextPageWithLayout = () => {
             dataSource={data}
             pagination={tableParams.pagination}
             loading={loading}
+            onChange={handleTableChange}
           />
         </section>
       </Space>
