@@ -30,21 +30,28 @@ const LogLeavesListPage: NextPageWithLayout = () => {
 
   const debouncedValue = useDebounce(searchValue, 500);
 
+  const map = new Map<string, Leave>();
+  if (data.length) {
+    for (const item of data) {
+      if (!map.has(item.employee.employeeId)) {
+        map.set(item.employee.employeeId, item);
+      }
+    }
+  }
+  const filter = map.size ? Array.from(map.keys()).map((key) => map.get(key)) : [];
+
   const columns: ColumnsType<Leave> = [
     {
       title: 'Employee',
       dataIndex: 'employee',
-      filters: data?.map((_item) => {
-        // Todo: Map employee name to filter
+      filters: filter?.map((item) => {
         return {
-          text: '',
-          value: '',
+          text: item?.employee.name || '',
+          value: item?.employee.employeeId || '',
         };
       }),
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
       onFilter: (value: string | number | boolean, record) =>
-        (record.employee?.name.indexOf(value as string) || 0) === 0,
+        (record.employee?.employeeId.indexOf(value as string) || 0) === 0,
       render: (_text, record) => record.employee?.name || 'N/A',
       sorter: (a, b) => (a.employee?.name?.length || 0) - (b.employee?.name?.length || 0),
       width: '20%',
