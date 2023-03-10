@@ -29,7 +29,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
     {
       title: 'Name',
       dataIndex: 'companyName',
-      sorter: (a, b) => a.companyName.length - b.companyName.length,
+      sorter: (a, b) => (a.companyName?.length || 0) - (b.companyName?.length || 0),
       width: '20%',
       ellipsis: true,
     },
@@ -37,7 +37,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
       title: 'Address',
       dataIndex: 'address',
       render: (_text, record) => record.address || 'N/A',
-      sorter: (a, b) => a.address.length - b.address.length,
+      sorter: (a, b) => (a.address?.length || 0) - (b.address?.length || 0),
       width: '20%',
       ellipsis: true,
     },
