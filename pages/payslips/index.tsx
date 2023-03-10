@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 import { payslipApi } from '~/api-clients/modules/payslip-api';
 import { ButtonWithModal, Seo } from '~/components';
+import { ButtonSendMail } from '~/components/ButtonSendMail';
 import { useDebounce } from '~/hooks';
 import { TableParams } from '~/models/components/Table';
 import { AppRoutes } from '~/models/constants/Routes';
@@ -80,7 +81,7 @@ const PayslipListPage: NextPageWithLayout = () => {
     {
       title: 'Action',
       dataIndex: 'action',
-      width: '20%',
+      width: '340px',
       render: (_text, record) => {
         return (
           <Space>
@@ -89,9 +90,11 @@ const PayslipListPage: NextPageWithLayout = () => {
                 View
               </Button>
             </Link>
+
             <Link href={`/${AppRoutes.payslips}/${record.payHistoryId}/edit`}>
               <Button type="primary">Edit</Button>
             </Link>
+
             <ButtonWithModal
               modalTitle="Warning"
               modalContent={`Are you sure to delete payslip type "${record.paidType}" between employee "${
@@ -111,6 +114,8 @@ const PayslipListPage: NextPageWithLayout = () => {
             >
               Delete
             </ButtonWithModal>
+
+            <ButtonSendMail data={record} />
           </Space>
         );
       },
