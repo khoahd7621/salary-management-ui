@@ -29,6 +29,8 @@ ARG NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
 ARG NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 ARG NEXT_PUBLIC_FIREBASE_APP_ID
 ARG NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+ARG SMTP_USER
+ARG SMTP_PASSWORD
 
 # Appends to .env.production
 RUN printf "$API_HOST_URL" >> .env.production >/dev/null
@@ -40,6 +42,8 @@ RUN printf "$NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET" >> .env.production >/dev/null
 RUN printf "$NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID" >> .env.production >/dev/null
 RUN printf "$NEXT_PUBLIC_FIREBASE_APP_ID" >> .env.production >/dev/null
 RUN printf "$NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID" >> .env.production >/dev/null
+RUN printf "$SMTP_USER" >> .env.production >/dev/null
+RUN printf "$SMTP_PASSWORD" >> .env.production >/dev/null
 
 WORKDIR /app
 
