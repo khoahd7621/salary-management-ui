@@ -29,7 +29,17 @@ export function CompanyForm({ form, onFinish, isSending }: CompanyFormProps) {
         >
           <Input />
         </Form.Item>
-        <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input company email!' }]}>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: 'Please input company email!' },
+            {
+              type: 'email',
+              message: 'The input is not valid email!',
+            },
+          ]}
+        >
           <Input />
         </Form.Item>
         <Form.Item

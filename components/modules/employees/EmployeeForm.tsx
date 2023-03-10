@@ -1,6 +1,7 @@
 import { Button, DatePicker, Form, Input, Space } from 'antd';
 import { FormInstance } from 'antd/lib/form/Form';
 import Link from 'next/link';
+
 import UploadImage from '~/components/UploadImage';
 import { Regex } from '~/models/constants/Regex';
 
@@ -70,7 +71,17 @@ export function EmployeeForm({ form, onFinish, image, setImage, isSending, butto
         >
           <Input />
         </Form.Item>
-        <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input employee email' }]}>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: 'Please input employee email' },
+            {
+              type: 'email',
+              message: 'The input is not valid email!',
+            },
+          ]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
