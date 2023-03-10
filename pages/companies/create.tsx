@@ -1,29 +1,28 @@
-import { Button, Form, Input, message, Space, Typography } from 'antd';
+import { Form, message, Space, Typography } from 'antd';
 import getConfig from 'next/config';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { companyApi } from '~/api-clients/modules/company-api';
 import { Seo } from '~/components';
+import { CompanyForm } from '~/components/modules/companies';
+import { AppRoutes } from '~/models/constants/Routes';
+import { FormData } from '~/models/modules/companies';
 
 const { serverRuntimeConfig } = getConfig();
 
-export interface CompanyForm {
-  companyName: string;
-  address: string;
-}
-
 export default function CreateCompanyPage() {
+  const [form] = Form.useForm<FormData>();
+
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onFinish = async ({ companyName, address }: CompanyForm) => {
+  const onFinish = async (data: FormData) => {
     setLoading(true);
     try {
-      await companyApi.create(companyName, address);
+      await companyApi.create(data);
       message.success('Company created successfully!');
-      router.push('/companies');
+      router.push(`/${AppRoutes.companies}`);
     } catch (error) {
       message.error('Something went wrong! Please refresh the page and try again!');
     }
@@ -36,7 +35,7 @@ export default function CreateCompanyPage() {
         data={{
           title: 'Create Company | OT & Salary Management',
           description: 'Create company page',
-          url: `${serverRuntimeConfig.HOST_URL}/companies/create`,
+          url: `${serverRuntimeConfig.HOST_URL}/${AppRoutes.companies}/create`,
         }}
       />
       <Space style={{ width: '100%' }} direction="vertical" size="middle">
@@ -44,42 +43,7 @@ export default function CreateCompanyPage() {
           <Typography.Title level={3}>Create new company</Typography.Title>
         </section>
 
-        <Form
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          autoComplete="off"
-        >
-          <Space style={{ width: '100%' }} direction="vertical">
-            <Form.Item
-              label="Company name"
-              name="companyName"
-              rules={[{ required: true, message: 'Please input company name!' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Address"
-              name="address"
-              rules={[{ required: true, message: 'Please input company address!' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button disabled={loading} type="primary" htmlType="submit">
-                Create
-              </Button>
-              <Link style={{ marginLeft: '16px' }} href="/companies" passHref>
-                <Button type="primary" danger>
-                  Cancel
-                </Button>
-              </Link>
-            </Form.Item>
-          </Space>
-        </Form>
+        <CompanyForm form={form} onFinish={onFinish} isSending={loading} />
       </Space>
     </>
   );

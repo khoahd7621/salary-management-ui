@@ -1,25 +1,22 @@
-import { Button, Form, Input, message, Space, Typography } from 'antd';
+import { Form, message, Space, Typography } from 'antd';
 import getConfig from 'next/config';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Seo } from '~/components';
 
 import { companyApi } from '~/api-clients/modules/company-api';
-import { Company } from '~/models/modules/companies';
-import { CompanyForm } from './create';
+import { CompanyForm } from '~/components/modules/companies';
+import { AppRoutes } from '~/models/constants/Routes';
+import { FormData } from '~/models/modules/companies';
 
 const { serverRuntimeConfig } = getConfig();
 
 export default function EditCompany() {
   const router = useRouter();
   const { companyId } = router.query;
-  const [company, setCompany] = useState<Company>({
-    companyId: '',
-    companyName: '',
-    address: '',
-    contracts: [],
-  });
+
+  const [form] = Form.useForm();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [sending, setSending] = useState<boolean>(false);
 
@@ -33,23 +30,30 @@ export default function EditCompany() {
   const fetchCompany = async (companyId: string) => {
     try {
       const response = await companyApi.getById(companyId);
-      setCompany(response);
+      form.setFieldsValue({
+        companyName: response.companyName,
+        email: response.email,
+        phone: response.phone,
+        address: response.address,
+      });
     } catch (error) {
-      router.push('/companies');
+      console.log(error);
+      router.push(`/${AppRoutes.companies}`);
     }
     setLoading(false);
   };
 
-  const onFinish = async ({ companyName, address }: CompanyForm) => {
+  const onFinish = async (data: FormData) => {
     setSending(true);
     try {
-      await companyApi.update(companyId as string, companyName, address);
-      await router.push('/companies');
+      await companyApi.update(companyId as string, data);
+      await router.push(`/${AppRoutes.companies}`);
       await message.success({
         content: 'Edit company successfully!',
         duration: 5,
       });
     } catch (error) {
+      console.log(error);
       message.error({
         content: 'Something went wrong! Please refresh the page and try again!',
         duration: 5,
@@ -64,7 +68,7 @@ export default function EditCompany() {
         data={{
           title: 'Edit company | OT & Salary Management',
           description: 'Edit company page',
-          url: `${serverRuntimeConfig.HOST_URL}/companies`,
+          url: `${serverRuntimeConfig.HOST_URL}/${AppRoutes.companies}`,
         }}
       />
 
@@ -72,50 +76,8 @@ export default function EditCompany() {
         <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography.Title level={3}>Edit company</Typography.Title>
         </section>
-        {loading ? (
-          <div>Loading ....</div>
-        ) : (
-          <section>
-            <Form
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              initialValues={{ remember: true }}
-              onFinish={onFinish}
-              autoComplete="off"
-            >
-              <Space style={{ width: '100%' }} direction="vertical">
-                <Form.Item
-                  label="Company name"
-                  name="companyName"
-                  initialValue={company.companyName}
-                  rules={[{ required: true, message: 'Please input company name!' }]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Address"
-                  name="address"
-                  initialValue={company.address}
-                  rules={[{ required: true, message: 'Please input company address!' }]}
-                >
-                  <Input />
-                </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                  <Button disabled={sending} type="primary" htmlType="submit">
-                    Edit
-                  </Button>
-                  <Link style={{ marginLeft: '16px' }} href="/companies" passHref>
-                    <Button type="primary" danger>
-                      Cancel
-                    </Button>
-                  </Link>
-                </Form.Item>
-              </Space>
-            </Form>
-          </section>
-        )}
+        {loading ? <div>Loading ....</div> : <CompanyForm form={form} onFinish={onFinish} isSending={sending} />}
       </Space>
     </>
   );

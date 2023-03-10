@@ -8,15 +8,14 @@ import { useEffect, useState } from 'react';
 import { companyApi } from '~/api-clients/modules/company-api';
 import { ButtonWithModal, Seo } from '~/components';
 import { TableParams } from '~/models/components/Table';
+import { AppRoutes } from '~/models/constants/Routes';
 import { NextPageWithLayout } from '~/models/layouts';
 import { Company } from '~/models/modules/companies';
-
-type DataType = Company;
 
 const { serverRuntimeConfig } = getConfig();
 
 const CompaniesListPage: NextPageWithLayout = () => {
-  const [data, setData] = useState<DataType[]>();
+  const [data, setData] = useState<Company[]>();
   const [loading, setLoading] = useState(false);
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
@@ -25,7 +24,7 @@ const CompaniesListPage: NextPageWithLayout = () => {
     },
   });
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<Company> = [
     {
       title: 'Name',
       dataIndex: 'companyName',
@@ -42,20 +41,26 @@ const CompaniesListPage: NextPageWithLayout = () => {
       ellipsis: true,
     },
     {
-      title: 'Number of contract',
-      dataIndex: 'contracts',
-      render: (_text, record) => record.contracts?.length || 0,
-      sorter: (a, b) => (a.contracts?.length || 0) - (b.contracts?.length || 0),
+      title: 'Email',
+      dataIndex: 'email',
+      render: (_text, record) => record.email || 'N/A',
+      sorter: (a, b) => (a.email?.length || 0) - (b.email?.length || 0),
+      width: '20%',
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      render: (_text, record) => record.phone || 'N/A',
+      sorter: (a, b) => (a.phone?.length || 0) - (b.phone?.length || 0),
       width: '20%',
     },
     {
       title: 'Action',
       dataIndex: 'action',
-      width: '20%',
       render: (_text, record) => {
         return (
           <Space>
-            <Link href={`/companies/${record.companyId}`}>
+            <Link href={`/${AppRoutes.companies}/${record.companyId}`}>
               <Button type="primary">Edit</Button>
             </Link>
             <ButtonWithModal
@@ -100,8 +105,8 @@ const CompaniesListPage: NextPageWithLayout = () => {
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
-    sorter: SorterResult<DataType> | SorterResult<DataType>[],
-    _extra: TableCurrentDataSource<DataType>
+    sorter: SorterResult<Company> | SorterResult<Company>[],
+    _extra: TableCurrentDataSource<Company>
   ) => {
     setTableParams({
       pagination,
@@ -120,14 +125,14 @@ const CompaniesListPage: NextPageWithLayout = () => {
         data={{
           title: 'Companies | OT & Salary Management',
           description: 'List companies page',
-          url: `${serverRuntimeConfig.HOST_URL}/companies`,
+          url: `${serverRuntimeConfig.HOST_URL}/${AppRoutes.companies}`,
         }}
       />
 
       <Space style={{ width: '100%' }} direction="vertical" size="large">
         <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography.Title level={3}>List companies</Typography.Title>
-          <Link href="/companies/create" passHref>
+          <Link href={`/${AppRoutes.companies}/create`} passHref>
             <Button type="primary" ghost>
               Create new company
             </Button>

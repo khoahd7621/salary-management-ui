@@ -1,4 +1,4 @@
-import { Company } from '~/models/modules/companies';
+import { Company, Payload } from '~/models/modules/companies';
 import axiosClient from '../axios-client';
 
 export const companyApi = {
@@ -8,19 +8,26 @@ export const companyApi = {
   getById: (companyId: string): Promise<Company> => {
     return axiosClient.get(`/companies/${companyId}`);
   },
-  create: (companyName: string, address: string) => {
-    return axiosClient.post('/companies', { company_name: companyName, address: address });
+  create: (company: Payload) => {
+    return axiosClient.post('/companies', {
+      address: company.address,
+      company_name: company.companyName,
+      phone: company.phone,
+      email: company.email,
+    });
   },
   delete: (companyId: string) => {
     return axiosClient.delete('/companies/delete', {
       data: { id: companyId },
     });
   },
-  update: (companyId: string, companyName: string, address: string) => {
+  update: (companyId: string, payload: Payload) => {
     return axiosClient.put('/companies/update', {
       id: companyId,
-      company_name: companyName,
-      company_address: address,
+      company_name: payload.companyName,
+      company_address: payload.address,
+      phone: payload.phone,
+      email: payload.email,
     });
   },
 };
