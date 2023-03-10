@@ -59,12 +59,7 @@ const LoginPage: NextPageWithLayout = () => {
           {errorMessage && (
             <Alert style={{ marginBottom: '16px' }} message="Error" description={errorMessage} type="error" closable />
           )}
-          <Form
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={handleLogin}
-          >
+          <Form onFinish={handleLogin}>
             <Space style={{ width: '100%' }} direction="vertical" size="small">
               <Form.Item
                 name="username"
