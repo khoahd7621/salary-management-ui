@@ -19,7 +19,7 @@ export function ButtonSendMail({ data }: ButtonSendMailProps) {
     try {
       await mailApi.sendMail({
         // Todo: change to real email
-        to: 'sample@gmail.com',
+        to: 'hoangdangkhoa7621@gmail.com',
         subject: `New Payslip in ${dayjs(data.paidDate).format('MM/YYYY')} from OT & Salary Management`,
         html: render(<MailTemplate payslip={data} />),
       });

@@ -91,8 +91,8 @@ const EmployeesListPage: NextPageWithLayout = () => {
       width: '10%',
     },
     {
-      title: 'Number of contract',
-      dataIndex: 'contracts',
+      title: 'Phone',
+      dataIndex: 'phoneNumber',
       render: (_text, record) => (
         <ButtonWithModal
           modalTitle="Employee detail"
@@ -102,11 +102,31 @@ const EmployeesListPage: NextPageWithLayout = () => {
           okType="primary"
           isLink
         >
-          {record.contracts?.length || 0}
+          {record.phoneNumber || 'N/A'}
         </ButtonWithModal>
       ),
-      sorter: (a, b) => (a.contracts?.length || 0) - (b.contracts?.length || 0),
-      width: '20%',
+      sorter: (a, b) => (a?.phoneNumber.length || 0) - (b?.phoneNumber.length || 0),
+      width: '10%',
+      ellipsis: true,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      render: (_text, record) => (
+        <ButtonWithModal
+          modalTitle="Employee detail"
+          modalContent={<Detail data={record} />}
+          type="info"
+          okText="Close"
+          okType="primary"
+          isLink
+        >
+          {record.email || 'N/A'}
+        </ButtonWithModal>
+      ),
+      sorter: (a, b) => (a?.email.length || 0) - (b?.email.length || 0),
+      width: '10%',
+      ellipsis: true,
     },
     {
       title: 'Action',

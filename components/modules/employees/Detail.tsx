@@ -13,17 +13,15 @@ export function Detail({ data }: DetailProps) {
       <tbody>
         <tr style={{ display: 'block', padding: '8px' }}>
           <td style={{ fontWeight: 'bold', width: '160px' }}>Image:</td>
-          <td>
-            <Image width={100} src={data.image} alt={data.name} />
-          </td>
+          <td>{data.image ? <Image width={100} src={data.image} alt={data.name} /> : 'N/a'}</td>
         </tr>
         <tr style={{ display: 'block', padding: '8px' }}>
           <td style={{ fontWeight: 'bold', width: '160px' }}>Code:</td>
-          <td>{data.code}</td>
+          <td>{data.code || 'N/a'}</td>
         </tr>
         <tr style={{ display: 'block', padding: '8px' }}>
           <td style={{ fontWeight: 'bold', width: '160px' }}>Name:</td>
-          <td>{data.name}</td>
+          <td>{data.name || 'N/a'}</td>
         </tr>
         <tr style={{ display: 'block', padding: '8px' }}>
           <td style={{ fontWeight: 'bold', width: '160px' }}>Date of birth:</td>
@@ -31,11 +29,15 @@ export function Detail({ data }: DetailProps) {
         </tr>
         <tr style={{ display: 'block', padding: '8px' }}>
           <td style={{ fontWeight: 'bold', width: '160px' }}>Phone:</td>
-          <td>{data.phoneNumber}</td>
+          <td>{data.phoneNumber || 'N/a'}</td>
+        </tr>
+        <tr style={{ display: 'block', padding: '8px' }}>
+          <td style={{ fontWeight: 'bold', width: '160px' }}>Email:</td>
+          <td>{data.email || 'N/a'}</td>
         </tr>
         <tr style={{ display: 'block', padding: '8px' }}>
           <td style={{ fontWeight: 'bold', width: '160px' }}>Address:</td>
-          <td>{data.address}</td>
+          <td>{data.address || 'N/a'}</td>
         </tr>
       </tbody>
     </table>

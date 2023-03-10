@@ -10,7 +10,7 @@ import { employeeApi } from '~/api-clients/modules/employee-api';
 import { Seo } from '~/components';
 import { EmployeeForm } from '~/components/modules/employees';
 import { firebaseConfig } from '~/firebaseconfig';
-import { CreateForm } from '~/models/modules/employees';
+import { FormData } from '~/models/modules/employees';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -20,7 +20,7 @@ export default function CreateEmployeePage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<any>(null);
 
-  const onFinish = async (data: CreateForm) => {
+  const onFinish = async (data: FormData) => {
     setLoading(true);
     try {
       const app = initializeApp(firebaseConfig);

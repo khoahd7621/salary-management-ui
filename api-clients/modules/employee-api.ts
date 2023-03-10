@@ -1,4 +1,4 @@
-import { Employee, PayloadCreate, PayloadUpdate } from '~/models/modules/employees';
+import { Employee, Payload } from '~/models/modules/employees';
 import axiosClient from '../axios-client';
 
 export const employeeApi = {
@@ -8,7 +8,7 @@ export const employeeApi = {
   getById: (employeeId: string): Promise<Employee> => {
     return axiosClient.get(`/employees/${employeeId}`);
   },
-  create: (employee: PayloadCreate) => {
+  create: (employee: Payload) => {
     return axiosClient.post('/employees', {
       employee_name: employee.employeeName,
       image: employee.image,
@@ -16,17 +16,19 @@ export const employeeApi = {
       address: employee.address,
       identify_number: employee.identifyNumber,
       phoneNumber: employee.phoneNumber,
+      email: employee.email,
     });
   },
-  update: (employee: PayloadUpdate) => {
+  update: (employeeId: string, employee: Payload) => {
     return axiosClient.put('/employees/update', {
-      id: employee.employeeId,
+      id: employeeId,
       employee_name: employee.employeeName,
       image: employee.image,
       day_of_birth: employee.dateOfBirth,
       address: employee.address,
       identify_number: employee.identifyNumber,
       phoneNumber: employee.phoneNumber,
+      email: employee.email,
     });
   },
   delete: (employeeId: string) => {

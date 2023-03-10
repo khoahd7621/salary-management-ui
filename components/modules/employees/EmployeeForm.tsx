@@ -71,6 +71,9 @@ export function EmployeeForm({ form, onFinish, image, setImage, isSending, butto
         >
           <Input />
         </Form.Item>
+        <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input employee email' }]}>
+          <Input />
+        </Form.Item>
         <Form.Item
           label="Phone"
           name="phoneNumber"

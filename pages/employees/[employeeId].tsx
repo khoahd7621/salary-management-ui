@@ -11,7 +11,7 @@ import { employeeApi } from '~/api-clients/modules/employee-api';
 import { Seo } from '~/components';
 import { EmployeeForm } from '~/components/modules/employees';
 import { firebaseConfig } from '~/firebaseconfig';
-import { UpdateForm } from '~/models/modules/employees/UpdateForm';
+import { FormData } from '~/models/modules/employees';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -40,6 +40,7 @@ export default function EditEmployeePage() {
         address: employee.address,
         identifyNumber: employee.identifyNumber,
         phoneNumber: employee.phoneNumber,
+        email: employee.email,
       });
       setImage({ preview: employee.image });
       setOldImageUrl(employee.image);
@@ -51,7 +52,7 @@ export default function EditEmployeePage() {
     setLoading(false);
   };
 
-  const onFinish = async (data: UpdateForm) => {
+  const onFinish = async (data: FormData) => {
     setSending(true);
     try {
       if (image && image.preview !== oldImageUrl) {
@@ -63,13 +64,13 @@ export default function EditEmployeePage() {
         const uploadResult = await uploadBytes(imageRef, image.originFileObj);
         const imageUrl = await getDownloadURL(uploadResult.ref);
 
-        await employeeApi.update({
+        await employeeApi.update(employeeId as string, {
           ...data,
           image: imageUrl,
           dateOfBirth: data.dateOfBirth.endOf('day').toISOString(),
         });
       } else {
-        await employeeApi.update({
+        await employeeApi.update(employeeId as string, {
           ...data,
           image: oldImageUrl,
           dateOfBirth: data.dateOfBirth.endOf('day').toISOString(),

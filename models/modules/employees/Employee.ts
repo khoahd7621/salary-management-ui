@@ -7,6 +7,7 @@ export interface Employee {
   identifyNumber: number;
   isActive: boolean;
   phoneNumber: string;
+  email: string;
   code: string;
   contracts?: any[];
   leaveLogs?: any[];

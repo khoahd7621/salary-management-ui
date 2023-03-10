@@ -1,4 +1,3 @@
 export * from './Employee';
-export * from './CreateForm';
-export * from './PayloadCreate';
-export * from './PayloadUpdate';
+export * from './Form';
+export * from './Payload';
