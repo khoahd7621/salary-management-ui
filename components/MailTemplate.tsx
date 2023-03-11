@@ -1,17 +1,4 @@
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Hr,
-  Html,
-  Img,
-  Link,
-  Preview,
-  Section,
-  Text,
-} from '@react-email/components';
+import { Body, Button, Container, Head, Heading, Hr, Html, Img, Preview, Section, Text } from '@react-email/components';
 import dayjs from 'dayjs';
 
 import { Payslip } from '~/models/modules/payslips';
@@ -62,12 +49,6 @@ export const MailTemplate = ({
               Download Payslip
             </Button>
           </Section>
-          <Text style={text}>
-            or copy and paste this URL into your browser:{' '}
-            <Link href={inviteLink} target="_blank" style={link} rel="noreferrer">
-              {inviteLink}
-            </Link>
-          </Text>
           <Hr style={hr} />
           <Text style={footer}>
             This payslip was sent from <span style={black}>OT & Salary Management</span> located in{' '}
@@ -107,11 +88,6 @@ const h1 = {
   textAlign: 'center' as const,
   margin: '30px 0',
   padding: '0',
-};
-
-const link = {
-  color: '#067df7',
-  textDecoration: 'none',
 };
 
 const text = {
