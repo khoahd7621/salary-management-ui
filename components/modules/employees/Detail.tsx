@@ -1,4 +1,4 @@
-import { Col, Image, Row, Space } from 'antd';
+import { Image } from 'antd';
 import dayjs from 'dayjs';
 
 import { Employee } from '~/models/modules/employees';
@@ -9,33 +9,37 @@ export interface DetailProps {
 
 export function Detail({ data }: DetailProps) {
   return (
-    <Space direction="vertical">
-      <Row>
-        <Col span={6}>Image:</Col>
-        <Col span={18}>
-          <Image width={100} src={data.image} alt={data.name} />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={6}>Code:</Col>
-        <Col span={18}>{data.code}</Col>
-      </Row>
-      <Row>
-        <Col span={6}>Name:</Col>
-        <Col span={18}>{data.name}</Col>
-      </Row>
-      <Row>
-        <Col span={6}>Date of birth:</Col>
-        <Col span={18}>{dayjs(data.dateOfBirth).format('DD/MM/YYYY')}</Col>
-      </Row>
-      <Row>
-        <Col span={6}>Phone:</Col>
-        <Col span={18}>{data.phoneNumber}</Col>
-      </Row>
-      <Row>
-        <Col span={6}>Address:</Col>
-        <Col span={18}>{data.address}</Col>
-      </Row>
-    </Space>
+    <table width={'100%'}>
+      <tbody>
+        <tr style={{ display: 'block', padding: '8px' }}>
+          <td style={{ fontWeight: 'bold', width: '160px' }}>Image:</td>
+          <td>{data.image ? <Image width={100} src={data.image} alt={data.name} /> : 'N/a'}</td>
+        </tr>
+        <tr style={{ display: 'block', padding: '8px' }}>
+          <td style={{ fontWeight: 'bold', width: '160px' }}>Code:</td>
+          <td>{data.code || 'N/a'}</td>
+        </tr>
+        <tr style={{ display: 'block', padding: '8px' }}>
+          <td style={{ fontWeight: 'bold', width: '160px' }}>Name:</td>
+          <td>{data.name || 'N/a'}</td>
+        </tr>
+        <tr style={{ display: 'block', padding: '8px' }}>
+          <td style={{ fontWeight: 'bold', width: '160px' }}>Date of birth:</td>
+          <td>{dayjs(data.dateOfBirth).format('DD/MM/YYYY')}</td>
+        </tr>
+        <tr style={{ display: 'block', padding: '8px' }}>
+          <td style={{ fontWeight: 'bold', width: '160px' }}>Phone:</td>
+          <td>{data.phoneNumber || 'N/a'}</td>
+        </tr>
+        <tr style={{ display: 'block', padding: '8px' }}>
+          <td style={{ fontWeight: 'bold', width: '160px' }}>Email:</td>
+          <td>{data.email || 'N/a'}</td>
+        </tr>
+        <tr style={{ display: 'block', padding: '8px' }}>
+          <td style={{ fontWeight: 'bold', width: '160px' }}>Address:</td>
+          <td>{data.address || 'N/a'}</td>
+        </tr>
+      </tbody>
+    </table>
   );
 }

@@ -9,6 +9,7 @@ export interface FormData {
   bhxh: number;
   bhyt: number;
   bhtn: number;
+  tax: number;
   companyId: string;
   companyPrice: number;
   employeeId: string;

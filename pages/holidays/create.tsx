@@ -21,8 +21,8 @@ export default function CreateHolidayPage() {
     try {
       await holidayApi.create({
         name: data.name,
-        startDate: data.applyDate[0].toISOString(),
-        endDate: data.applyDate[1].toISOString(),
+        startDate: data.applyDate[0].endOf('day').toISOString(),
+        endDate: data.applyDate[1].endOf('day').toISOString(),
         isPaid: data.isPaid,
       });
       await router.push(`/${AppRoutes.holidays}`);

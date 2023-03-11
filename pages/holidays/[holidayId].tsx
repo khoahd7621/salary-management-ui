@@ -11,7 +11,7 @@ import { AppRoutes } from '~/models/constants/Routes';
 
 const { serverRuntimeConfig } = getConfig();
 
-export default function CreateHolidayPage() {
+export default function EditHolidayPage() {
   const router = useRouter();
   const { holidayId } = router.query;
   const [form] = Form.useForm();
@@ -47,8 +47,8 @@ export default function CreateHolidayPage() {
       await holidayApi.update({
         id: holidayId as string,
         name: data.name,
-        startDate: data.applyDate[0].toISOString(),
-        endDate: data.applyDate[1].toISOString(),
+        startDate: data.applyDate[0].endOf('day').toISOString(),
+        endDate: data.applyDate[1].endOf('day').toISOString(),
         isPaid: data.isPaid,
       });
       await router.push(`/${AppRoutes.holidays}`);

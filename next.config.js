@@ -28,6 +28,8 @@ const nextConfig = {
   serverRuntimeConfig: {
     API_HOST_URL: process.env.API_HOST_URL,
     HOST_URL: process.env.HOST_URL,
+    SMTP_USER: process.env.SMTP_USER,
+    SMTP_PASSWORD: process.env.SMTP_PASSWORD,
   },
 };
 

@@ -9,14 +9,10 @@ import { useAuth } from '~/hooks';
 import { SubLayout } from '~/layouts';
 import { NextPageWithLayout } from '~/models/layouts';
 import { Payload } from '~/models/modules/login';
-import { User } from '~/models/modules/User';
-import { useAppDispatch } from '~/redux/hooks';
-import { login as dispatchActionLogin } from '~/redux/slices/authSlice';
 
 const { serverRuntimeConfig } = getConfig();
 
 const LoginPage: NextPageWithLayout = () => {
-  const dispatch = useAppDispatch();
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -26,8 +22,7 @@ const LoginPage: NextPageWithLayout = () => {
     setErrorMessage('');
     setIsSending(true);
     try {
-      const response: User = await login(values);
-      dispatch(dispatchActionLogin(response));
+      await login(values);
       message.success('Login successfully!');
     } catch (error) {
       console.log(error);
@@ -64,12 +59,7 @@ const LoginPage: NextPageWithLayout = () => {
           {errorMessage && (
             <Alert style={{ marginBottom: '16px' }} message="Error" description={errorMessage} type="error" closable />
           )}
-          <Form
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={handleLogin}
-          >
+          <Form onFinish={handleLogin}>
             <Space style={{ width: '100%' }} direction="vertical" size="small">
               <Form.Item
                 name="username"

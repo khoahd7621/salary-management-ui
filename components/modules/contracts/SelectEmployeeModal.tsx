@@ -7,14 +7,14 @@ import { Employee } from '~/models/modules/employees';
 
 export interface ComponentProps {
   setEmployee: (_value: Employee | null) => void;
-  employee?: Employee;
+  employee?: Employee | null;
   employeeName: string;
 }
 
-export const SelectEmployeeModal = ({ setEmployee, employeeName }: ComponentProps) => {
+export const SelectEmployeeModal = ({ setEmployee, employeeName, employee }: ComponentProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [data, setData] = useState<Employee[]>([]);
-  const [currentRow, setCurrentRow] = useState<Employee | null>(null);
+  const [currentRow, setCurrentRow] = useState<Employee | null>(employee || null);
   const [searchText, setSearchText] = useState<string>('');
 
   useEffect(() => {

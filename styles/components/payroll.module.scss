@@ -1,0 +1,66 @@
+.payroll-container {
+  width: 65%;
+  margin: 0 auto 32px;
+  min-width: 750px;
+
+  @media screen and (max-width: 1250px) {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 1400px) {
+    width: 75%;
+  }
+
+  .header {
+    display: flex;
+    margin-bottom: 32px;
+
+    .logo {
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+    }
+
+    .infor {
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  .action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .table {
+    margin-top: 8px;
+    margin-bottom: 16px;
+
+    td {
+      padding: 6px;
+    }
+
+    .title {
+      font-weight: bold;
+      width: 260px;
+    }
+
+    .sub-title {
+      font-weight: 600;
+      width: 340px;
+    }
+
+    .align-left {
+      text-align: right;
+
+      .total {
+        font-weight: bold;
+        font-size: 20px;
+      }
+    }
+  }
+}

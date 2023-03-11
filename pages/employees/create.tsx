@@ -10,7 +10,7 @@ import { employeeApi } from '~/api-clients/modules/employee-api';
 import { Seo } from '~/components';
 import { EmployeeForm } from '~/components/modules/employees';
 import { firebaseConfig } from '~/firebaseconfig';
-import { CreateForm } from '~/models/modules/employees';
+import { FormData } from '~/models/modules/employees';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -20,7 +20,7 @@ export default function CreateEmployeePage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<any>(null);
 
-  const onFinish = async (data: CreateForm) => {
+  const onFinish = async (data: FormData) => {
     setLoading(true);
     try {
       const app = initializeApp(firebaseConfig);
@@ -31,7 +31,7 @@ export default function CreateEmployeePage() {
       const uploadResult = await uploadBytes(imageRef, image.originFileObj);
       const imageUrl = await getDownloadURL(uploadResult.ref);
 
-      await employeeApi.create({ ...data, image: imageUrl, dateOfBirth: data.dateOfBirth.toISOString() });
+      await employeeApi.create({ ...data, image: imageUrl, dateOfBirth: data.dateOfBirth.endOf('day').toISOString() });
       await router.push('/employees');
       await message.success('Create employee successfully!');
     } catch (error) {

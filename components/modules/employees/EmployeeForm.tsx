@@ -1,6 +1,7 @@
 import { Button, DatePicker, Form, Input, Space } from 'antd';
 import { FormInstance } from 'antd/lib/form/Form';
 import Link from 'next/link';
+
 import UploadImage from '~/components/UploadImage';
 import { Regex } from '~/models/constants/Regex';
 
@@ -25,7 +26,6 @@ export function EmployeeForm({ form, onFinish, image, setImage, isSending, butto
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
       onFinish={onFinish}
       autoComplete="off"
     >
@@ -66,6 +66,19 @@ export function EmployeeForm({ form, onFinish, image, setImage, isSending, butto
             {
               pattern: new RegExp(Regex.VIETNAM_IDENTIFY_NUMBER),
               message: 'Identity number is not valid',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: 'Please input employee email' },
+            {
+              type: 'email',
+              message: 'The input is not valid email!',
             },
           ]}
         >

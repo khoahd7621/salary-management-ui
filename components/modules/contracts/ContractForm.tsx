@@ -53,7 +53,7 @@ export function ContractForm({
       setEmployee(employee);
       form?.setFieldsValue({ employeeId: employee.employeeId });
     } else {
-      setCompany(null);
+      setEmployee(null);
       form?.setFieldsValue({ employeeId: '' });
     }
   };
@@ -64,7 +64,6 @@ export function ContractForm({
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
       onFinish={onFinish}
       autoComplete="off"
     >
@@ -149,6 +148,15 @@ export function ContractForm({
           />
         </Form.Item>
         <Form.Item label="BHTN" name="bhtn" rules={[{ required: true, message: 'Please input price of BHTN!' }]}>
+          <InputNumber
+            formatter={(value) => addCommasToNumber(value)}
+            addonAfter="VNĐ"
+            min={0}
+            max={1000000000}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+        <Form.Item label="Tax" name="tax" rules={[{ required: true, message: 'Please input price of TAX!' }]}>
           <InputNumber
             formatter={(value) => addCommasToNumber(value)}
             addonAfter="VNĐ"
