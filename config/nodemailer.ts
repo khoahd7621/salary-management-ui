@@ -15,6 +15,8 @@ export const transporter = nodemailer.createTransport({
     user: serverRuntimeConfig.SMTP_USER,
     pass: serverRuntimeConfig.SMTP_PASSWORD,
   },
+  port: 465,
+  secure: true, // use SSL
 });
 
 export const mailOptions = {
