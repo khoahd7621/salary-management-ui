@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { payslipApi } from '~/api-clients/modules/payslip-api';
 
+import { payslipApi } from '~/api-clients/modules/payslip-api';
 import { salaryApi } from '~/api-clients/modules/salary-api';
 import { PayrollTmp, Seo } from '~/components';
 import { AppRoutes } from '~/models/constants/Routes';

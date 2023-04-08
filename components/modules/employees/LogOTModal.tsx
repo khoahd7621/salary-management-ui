@@ -24,9 +24,13 @@ export function LogOTModal({ employeeId, setEmployeeId }: LogOTModelProps) {
       form.resetFields();
       message.success('Log OT successfully!');
       setEmployeeId('');
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      message.error('Something went wrong. Please try again later.');
+      if (error?.response?.status === 400) {
+        message.error("Can't log OT for future date!");
+      } else {
+        message.error('Something went wrong. Please try again later.');
+      }
     }
     setIsSending(false);
   };

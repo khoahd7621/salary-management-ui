@@ -24,9 +24,13 @@ export function LogLeaveModal({ employeeId, setEmployeeId }: LogLeaveModelProps)
       form.resetFields();
       message.success('Log leave successfully!');
       setEmployeeId('');
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      message.error('Something went wrong. Please try again later.');
+      if (error?.response?.status === 400) {
+        message.error(error.response.data);
+      } else {
+        message.error('Something went wrong. Please try again later.');
+      }
     }
     setIsSending(false);
   };

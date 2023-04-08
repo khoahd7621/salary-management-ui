@@ -1,8 +1,8 @@
 import { ApiRoutes } from '~/models/constants/Routes';
 import { CreatePayload, Leave, UpdatePayload } from '~/models/modules/leaves';
-import axiosClient from '../axios-client';
+import axiosClient from '../axios-client-v2';
 
-const routes = ApiRoutes.leaves;
+const routes = ApiRoutes.leavesV2;
 
 export const leaveApi = {
   getAll: (): Promise<Leave[]> => {

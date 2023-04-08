@@ -34,9 +34,10 @@ export default function CreateEmployeePage() {
       await employeeApi.create({ ...data, image: imageUrl, dateOfBirth: data.dateOfBirth.endOf('day').toISOString() });
       await router.push('/employees');
       await message.success('Create employee successfully!');
-    } catch (error) {
-      console.log(error);
-      message.error('Something went wrong! Please refresh the page and try again!');
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        message.error(error.response.data);
+      } else message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
   };
