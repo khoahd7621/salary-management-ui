@@ -6,9 +6,10 @@ import { leaveApi } from '~/api-clients/modules/leave-api';
 export interface LogLeaveModelProps {
   employeeId: string;
   setEmployeeId: (_employeeId: string) => void;
+  handleAfterSubmitSuccess?: () => Promise<void>;
 }
 
-export function LogLeaveModal({ employeeId, setEmployeeId }: LogLeaveModelProps) {
+export function LogLeaveModal({ employeeId, setEmployeeId, handleAfterSubmitSuccess }: LogLeaveModelProps) {
   const [form] = Form.useForm();
   const [isSending, setIsSending] = useState(false);
 
@@ -24,6 +25,9 @@ export function LogLeaveModal({ employeeId, setEmployeeId }: LogLeaveModelProps)
       form.resetFields();
       message.success('Log leave successfully!');
       setEmployeeId('');
+      if (handleAfterSubmitSuccess) {
+        await handleAfterSubmitSuccess();
+      }
     } catch (error: any) {
       console.log(error);
       if (error?.response?.status === 400) {

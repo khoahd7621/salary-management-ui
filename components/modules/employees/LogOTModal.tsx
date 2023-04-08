@@ -7,9 +7,10 @@ import { overtimeApi } from '~/api-clients/modules/overtime-api';
 export interface LogOTModelProps {
   employeeId: string;
   setEmployeeId: (_employeeId: string) => void;
+  handleAfterSubmitSuccess?: () => Promise<void>;
 }
 
-export function LogOTModal({ employeeId, setEmployeeId }: LogOTModelProps) {
+export function LogOTModal({ employeeId, setEmployeeId, handleAfterSubmitSuccess }: LogOTModelProps) {
   const [form] = Form.useForm();
   const [isSending, setIsSending] = useState(false);
 
@@ -24,6 +25,9 @@ export function LogOTModal({ employeeId, setEmployeeId }: LogOTModelProps) {
       form.resetFields();
       message.success('Log OT successfully!');
       setEmployeeId('');
+      if (handleAfterSubmitSuccess) {
+        await handleAfterSubmitSuccess();
+      }
     } catch (error: any) {
       console.log(error);
       if (error?.response?.status === 400) {

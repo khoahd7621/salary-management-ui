@@ -1,4 +1,4 @@
-import { message, Space, Typography } from 'antd';
+import { Button, message, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { payslipApi } from '~/api-clients/modules/payslip-api';
 import { salaryApi } from '~/api-clients/modules/salary-api';
 import { PayrollTmp, Seo } from '~/components';
+import { LogLeaveModal, LogOTModal } from '~/components/modules/employees';
 import { AppRoutes } from '~/models/constants/Routes';
 import { Payload } from '~/models/modules/payslips';
 import { Salary } from '~/models/modules/salaries';
@@ -20,6 +21,9 @@ export default function CalculateSalaryPages() {
   const [data, setData] = useState<Salary | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [sending, setSending] = useState<boolean>(false);
+
+  const [employeeIdOT, setEmployeeIdOT] = useState<string>('');
+  const [employeeIdLeave, setEmployeeIdLeave] = useState<string>('');
 
   useEffect(() => {
     if (employeeId && salaryType && date) {
@@ -86,6 +90,21 @@ export default function CalculateSalaryPages() {
           <Space style={{ width: '100%' }} direction="vertical" size="large">
             <Typography.Title level={3}>Temporary payslip</Typography.Title>
 
+            <Space>
+              <Button
+                style={{ backgroundColor: '#97DEFF', color: '#000' }}
+                onClick={() => setEmployeeIdOT(employeeId as string)}
+              >
+                Add OT
+              </Button>
+              <Button
+                style={{ backgroundColor: '#66347F', color: '#fff' }}
+                onClick={() => setEmployeeIdLeave(employeeId as string)}
+              >
+                Add Leave
+              </Button>
+            </Space>
+
             <PayrollTmp
               data={data as Salary}
               type={salaryType as string}
@@ -95,6 +114,25 @@ export default function CalculateSalaryPages() {
               handleClickCancel={handleClickCancel}
             />
           </Space>
+
+          <LogOTModal
+            employeeId={employeeIdOT}
+            setEmployeeId={setEmployeeIdOT}
+            handleAfterSubmitSuccess={async () => {
+              setLoading(true);
+              setData(null);
+              await fetchData();
+            }}
+          />
+          <LogLeaveModal
+            employeeId={employeeIdLeave}
+            setEmployeeId={setEmployeeIdLeave}
+            handleAfterSubmitSuccess={async () => {
+              setLoading(true);
+              setData(null);
+              await fetchData();
+            }}
+          />
         </>
       )}
     </>
