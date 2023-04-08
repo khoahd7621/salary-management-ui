@@ -23,8 +23,10 @@ export default function CreateCompanyPage() {
       await companyApi.create(data);
       message.success('Company created successfully!');
       router.push(`/${AppRoutes.companies}`);
-    } catch (error) {
-      message.error('Something went wrong! Please refresh the page and try again!');
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        message.error(error.response.data);
+      } else message.error('Something went wrong! Please refresh the page and try again!');
     }
     setLoading(false);
   };
